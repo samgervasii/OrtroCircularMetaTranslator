@@ -72,6 +72,7 @@ PRINT              : 'print';
 EXEC               : 'exec';
 TRUE               : 'True';
 FALSE              : 'False';
+REV                : 'rev';
 
 // Operators
 
