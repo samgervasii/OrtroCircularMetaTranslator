@@ -1,4 +1,4 @@
-package PythonParseTree;
+package antlr;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonToken;
