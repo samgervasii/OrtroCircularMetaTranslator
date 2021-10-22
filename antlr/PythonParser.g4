@@ -64,10 +64,10 @@ compound_stmt
     | TRY COLON suite (except_clause+ else_clause? finally_clause? | finally_clause) #try_stmt
     | ASYNC? WITH with_item (COMMA with_item)* COLON suite                           #with_stmt
     | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
-    | REV COLON revblock                                                             #rev_stmt
+    | REV COLON revblock                                                             #rev_stmt  //Gervasi Samuele
     ;
 
-revblock //same as suite but we can manipulate directly the reversible block
+revblock //same as suite but we can manipulate directly the reversible block                   Gervasi Samuele
     : simple_stmt
     | LINE_BREAK INDENT stmt+ DEDENT
     ;
