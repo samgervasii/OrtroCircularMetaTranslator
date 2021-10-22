@@ -68,8 +68,8 @@ compound_stmt
     ;
 
 revblock //same as suite but we can manipulate directly the reversible block                   Gervasi Samuele
-    : simple_stmt
-    | LINE_BREAK INDENT stmt+ DEDENT
+    : simple_stmt       //rev_i, we'll keep this from suite because we can eventually have the syntax "rev instruction"
+    | LINE_BREAK INDENT stmt+ DEDENT     //rev_i+
     ;
 
 suite
