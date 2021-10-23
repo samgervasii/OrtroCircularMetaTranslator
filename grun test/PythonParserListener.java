@@ -139,25 +139,27 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitRev_stmt(PythonParser.Rev_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#rev_i}.
+	 * Enter a parse tree produced by the {@code rev_expr}
+	 * labeled alternative in {@link PythonParser#rev_i}.
 	 * @param ctx the parse tree
 	 */
-	void enterRev_i(PythonParser.Rev_iContext ctx);
+	void enterRev_expr(PythonParser.Rev_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonParser#rev_i}.
+	 * Exit a parse tree produced by the {@code rev_expr}
+	 * labeled alternative in {@link PythonParser#rev_i}.
 	 * @param ctx the parse tree
 	 */
-	void exitRev_i(PythonParser.Rev_iContext ctx);
+	void exitRev_expr(PythonParser.Rev_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#rev_assign}.
+	 * Enter a parse tree produced by {@link PythonParser#rev_op}.
 	 * @param ctx the parse tree
 	 */
-	void enterRev_assign(PythonParser.Rev_assignContext ctx);
+	void enterRev_op(PythonParser.Rev_opContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonParser#rev_assign}.
+	 * Exit a parse tree produced by {@link PythonParser#rev_op}.
 	 * @param ctx the parse tree
 	 */
-	void exitRev_assign(PythonParser.Rev_assignContext ctx);
+	void exitRev_op(PythonParser.Rev_opContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#rev_block}.
 	 * @param ctx the parse tree

@@ -73,10 +73,10 @@ rev_stmt //Gervasi Samuele
     ; 
 
 rev_i //reversible instruction Gervasi Samuele
-    : testlist_star_expr rev_assign (yield_expr | testlist)
+    : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK    #rev_expr
     ;
 
-rev_assign //reversible assignment Gervasi Samuele
+rev_op //reversible assignment Gervasi Samuele
     : op=( ADD_ASSIGN
          | SUB_ASSIGN
          | MULT_ASSIGN
@@ -94,7 +94,7 @@ rev_assign //reversible assignment Gervasi Samuele
     ;
 
 rev_block //Gervasi Samuele
-    : LINE_BREAK INDENT rev_i+ DEDENT NONE
+    : LINE_BREAK INDENT rev_i+ DEDENT 
     ;
 
 suite

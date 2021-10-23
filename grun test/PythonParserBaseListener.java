@@ -159,25 +159,25 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRev_i(PythonParser.Rev_iContext ctx) { }
+	@Override public void enterRev_expr(PythonParser.Rev_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRev_i(PythonParser.Rev_iContext ctx) { }
+	@Override public void exitRev_expr(PythonParser.Rev_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRev_assign(PythonParser.Rev_assignContext ctx) { }
+	@Override public void enterRev_op(PythonParser.Rev_opContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRev_assign(PythonParser.Rev_assignContext ctx) { }
+	@Override public void exitRev_op(PythonParser.Rev_opContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
