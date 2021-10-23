@@ -73,7 +73,8 @@ rev_stmt //Gervasi Samuele
     ; 
 
 rev_i //reversible instruction Gervasi Samuele
-    : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK    #rev_expr
+    : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK                               #rev_expr
+    | IF cond=test COLON rev_block rev_else ASSERT test (COMMA test)? LINE_BREAK                 #rev_if                          
     ;
 
 rev_op //reversible assignment Gervasi Samuele
@@ -112,6 +113,10 @@ elif_clause
 
 else_clause
     : ELSE COLON suite
+    ;
+
+rev_else //Gervasi Samuele
+    : ELSE COLON rev_block
     ;
 
 finally_clause

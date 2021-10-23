@@ -151,6 +151,18 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitRev_expr(PythonParser.Rev_exprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code rev_if}
+	 * labeled alternative in {@link PythonParser#rev_i}.
+	 * @param ctx the parse tree
+	 */
+	void enterRev_if(PythonParser.Rev_ifContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code rev_if}
+	 * labeled alternative in {@link PythonParser#rev_i}.
+	 * @param ctx the parse tree
+	 */
+	void exitRev_if(PythonParser.Rev_ifContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#rev_op}.
 	 * @param ctx the parse tree
 	 */
@@ -210,6 +222,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitElse_clause(PythonParser.Else_clauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#rev_else}.
+	 * @param ctx the parse tree
+	 */
+	void enterRev_else(PythonParser.Rev_elseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#rev_else}.
+	 * @param ctx the parse tree
+	 */
+	void exitRev_else(PythonParser.Rev_elseContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#finally_clause}.
 	 * @param ctx the parse tree
