@@ -1,19 +1,43 @@
-rev_i
-    : testlist_star_expr op=( ADD_ASSIGN
-                            | SUB_ASSIGN
-                            | MULT_ASSIGN
-                            | AT_ASSIGN
-                            | DIV_ASSIGN
-                            | MOD_ASSIGN
-                            | AND_ASSIGN
-                            | OR_ASSIGN
-                            | XOR_ASSIGN
-                            | LEFT_SHIFT_ASSIGN
-                            | RIGHT_SHIFT_ASSIGN
-                            | POWER_ASSIGN
-                            | IDIV_ASSIGN
-                            )
-                        (yield_expr | testlist)        #rev_assign
-    |                                                  #rev_if
-    |                                                  #rev_for
+1st IDEA: da controllare meglio con altre prove
+
+compound_stmt
+    : IF cond=test COLON suite elif_clause* else_clause?                             #if_stmt
+    | WHILE test COLON suite else_clause?                                            #while_stmt
+    | ASYNC? FOR exprlist IN testlist COLON suite else_clause?                       #for_stmt
+    | TRY COLON suite (except_clause+ else_clause? finally_clause? | finally_clause) #try_stmt
+    | ASYNC? WITH with_item (COMMA with_item)* COLON suite                           #with_stmt
+    | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
+    | REV COLON revblock                                                             #rev_stmt  //Gervasi Samuele
     ;
+
+revblock //same as suite but we can manipulate directly the reversible block                   Gervasi Samuele
+    : rev_i      //rev_i, we'll keep this from suite because we can eventually have the syntax "rev: instruction"
+    | LINE_BREAK INDENT rev_i+ DEDENT     
+    ;
+
+rev_i //instruction that are reversible Gervasi Samuele
+    : testlist_star_expr reversible_assign?       #rev_assign
+;
+
+reversible_assign //Gervasi Samuele
+    : op=( ADD_ASSIGN
+         | SUB_ASSIGN
+         | MULT_ASSIGN
+         | AT_ASSIGN
+         | DIV_ASSIGN
+         | MOD_ASSIGN
+         | AND_ASSIGN
+         | OR_ASSIGN
+         | XOR_ASSIGN
+         | LEFT_SHIFT_ASSIGN
+         | RIGHT_SHIFT_ASSIGN
+         | POWER_ASSIGN
+         | IDIV_ASSIGN
+         )
+      (yield_expr | testlist)
+    ;
+
+
+
+
+2nd IDEA:

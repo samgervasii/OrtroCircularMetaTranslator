@@ -1,4 +1,4 @@
-// Generated from .\PythonParser.g4 by ANTLR 4.9.2
+// Generated from PythonParser.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -129,27 +129,45 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code rev_stmt}
-	 * labeled alternative in {@link PythonParser#compound_stmt}.
+	 * Enter a parse tree produced by {@link PythonParser#rev_stmt}.
 	 * @param ctx the parse tree
 	 */
 	void enterRev_stmt(PythonParser.Rev_stmtContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code rev_stmt}
-	 * labeled alternative in {@link PythonParser#compound_stmt}.
+	 * Exit a parse tree produced by {@link PythonParser#rev_stmt}.
 	 * @param ctx the parse tree
 	 */
 	void exitRev_stmt(PythonParser.Rev_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#revblock}.
+	 * Enter a parse tree produced by {@link PythonParser#rev_i}.
 	 * @param ctx the parse tree
 	 */
-	void enterRevblock(PythonParser.RevblockContext ctx);
+	void enterRev_i(PythonParser.Rev_iContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonParser#revblock}.
+	 * Exit a parse tree produced by {@link PythonParser#rev_i}.
 	 * @param ctx the parse tree
 	 */
-	void exitRevblock(PythonParser.RevblockContext ctx);
+	void exitRev_i(PythonParser.Rev_iContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#rev_assign}.
+	 * @param ctx the parse tree
+	 */
+	void enterRev_assign(PythonParser.Rev_assignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#rev_assign}.
+	 * @param ctx the parse tree
+	 */
+	void exitRev_assign(PythonParser.Rev_assignContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#rev_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterRev_block(PythonParser.Rev_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#rev_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitRev_block(PythonParser.Rev_blockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#suite}.
 	 * @param ctx the parse tree

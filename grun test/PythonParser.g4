@@ -55,6 +55,7 @@ eval_input
 stmt
     : simple_stmt
     | compound_stmt
+    | rev_stmt //Gervasi Samuele
     ;
 
 compound_stmt
@@ -64,12 +65,36 @@ compound_stmt
     | TRY COLON suite (except_clause+ else_clause? finally_clause? | finally_clause) #try_stmt
     | ASYNC? WITH with_item (COMMA with_item)* COLON suite                           #with_stmt
     | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
-    | REV COLON revblock                                                             #rev_stmt
     ;
 
-revblock //same as suite but we can manipulate directly the reversible block
-    : simple_stmt
-    | LINE_BREAK INDENT stmt+ DEDENT
+rev_stmt //Gervasi Samuele
+    : REV rev_i 
+    | REV COLON rev_block
+    ; 
+
+rev_i //reversible instruction Gervasi Samuele
+    : testlist_star_expr rev_assign (yield_expr | testlist)
+    ;
+
+rev_assign //reversible assignment Gervasi Samuele
+    : op=( ADD_ASSIGN
+         | SUB_ASSIGN
+         | MULT_ASSIGN
+         | AT_ASSIGN
+         | DIV_ASSIGN
+         | MOD_ASSIGN
+         | AND_ASSIGN
+         | OR_ASSIGN
+         | XOR_ASSIGN
+         | LEFT_SHIFT_ASSIGN
+         | RIGHT_SHIFT_ASSIGN
+         | POWER_ASSIGN
+         | IDIV_ASSIGN
+         )
+    ;
+
+rev_block //Gervasi Samuele
+    : LINE_BREAK INDENT rev_i+ DEDENT NONE
     ;
 
 suite
