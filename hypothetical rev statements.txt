@@ -141,6 +141,15 @@ rev_block //Gervasi Samuele
 
 
 
+___________________________________________________________________________________________________________
+
+
+
+IDEAS FOR WHILE LOOP:
+
+        
+       
+ASSERT test (COMMA test)? WHILE TRUE COLON rev_block IF cond=test COLON BREAK rev_block ASSERT test (COMMA test)? LINE_BREAK #pablo                                            
 
 
 
