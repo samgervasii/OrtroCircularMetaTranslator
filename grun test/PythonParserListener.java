@@ -129,16 +129,6 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#rev_stmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterRev_stmt(PythonParser.Rev_stmtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PythonParser#rev_stmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitRev_stmt(PythonParser.Rev_stmtContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code rev_expr}
 	 * labeled alternative in {@link PythonParser#rev_i}.
 	 * @param ctx the parse tree
@@ -273,15 +263,29 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitClassdef(PythonParser.ClassdefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#funcdef}.
+	 * Enter a parse tree produced by the {@code func}
+	 * labeled alternative in {@link PythonParser#funcdef}.
 	 * @param ctx the parse tree
 	 */
-	void enterFuncdef(PythonParser.FuncdefContext ctx);
+	void enterFunc(PythonParser.FuncContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonParser#funcdef}.
+	 * Exit a parse tree produced by the {@code func}
+	 * labeled alternative in {@link PythonParser#funcdef}.
 	 * @param ctx the parse tree
 	 */
-	void exitFuncdef(PythonParser.FuncdefContext ctx);
+	void exitFunc(PythonParser.FuncContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code rev_func}
+	 * labeled alternative in {@link PythonParser#funcdef}.
+	 * @param ctx the parse tree
+	 */
+	void enterRev_func(PythonParser.Rev_funcContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code rev_func}
+	 * labeled alternative in {@link PythonParser#funcdef}.
+	 * @param ctx the parse tree
+	 */
+	void exitRev_func(PythonParser.Rev_funcContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#typedargslist}.
 	 * @param ctx the parse tree

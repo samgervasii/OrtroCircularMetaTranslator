@@ -55,7 +55,6 @@ eval_input
 stmt
     : simple_stmt
     | compound_stmt
-    | rev_stmt //Gervasi Samuele
     ;
 
 compound_stmt
@@ -67,10 +66,6 @@ compound_stmt
     | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
     ;
 
-rev_stmt //Gervasi Samuele
-    : REV rev_i 
-    | REV COLON rev_block
-    ; 
 
 rev_i //reversible instruction Gervasi Samuele
     : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK                               #rev_expr
@@ -78,20 +73,7 @@ rev_i //reversible instruction Gervasi Samuele
     ;
 
 rev_op //reversible assignment Gervasi Samuele
-    : op=( ADD_ASSIGN
-         | SUB_ASSIGN
-         | MULT_ASSIGN
-         | AT_ASSIGN
-         | DIV_ASSIGN
-         | MOD_ASSIGN
-         | AND_ASSIGN
-         | OR_ASSIGN
-         | XOR_ASSIGN
-         | LEFT_SHIFT_ASSIGN
-         | RIGHT_SHIFT_ASSIGN
-         | POWER_ASSIGN
-         | IDIV_ASSIGN
-         )
+    : op=( ADD_ASSIGN | SUB_ASSIGN)
     ;
 
 rev_block //Gervasi Samuele
@@ -139,7 +121,8 @@ classdef
     ;
 
 funcdef
-    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite
+    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite             #func
+    | REV name OPEN_PAREN typedargslist? CLOSE_PAREN COLON rev_block                              #rev_func        //Gervasi Samuele                          
     ;
 
 // python 3 paramters
