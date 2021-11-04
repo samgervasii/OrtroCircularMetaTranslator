@@ -1,0 +1,11 @@
+rev f :
+    x += f_fwd(2)
+    y += f_bwd(3)
+
+rev_flag : true
+
+target : def f_fwd : x += f_fwd(2) y += f_bwd(3)
+
+string "x -= f_fwd(2)"
+
+list/String "" "x -= 2"

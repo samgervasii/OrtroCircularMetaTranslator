@@ -69,7 +69,7 @@ compound_stmt
 
 rev_i //reversible instruction Gervasi Samuele
     : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK                               #rev_expr
-    | IF cond=test COLON rev_block rev_else ASSERT test (COMMA test)? LINE_BREAK                 #rev_if                          
+   // | IF cond=test COLON rev_block rev_else ASSERT test (COMMA test)? LINE_BREAK                 #rev_if                          
     ;
 
 rev_op //reversible assignment Gervasi Samuele
