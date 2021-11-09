@@ -1,4 +1,4 @@
-# OrthrusPythonTranslator
+# OrtrOPythonTranslator
 
 Project Structure: 
 
