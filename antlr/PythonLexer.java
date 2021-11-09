@@ -1,4 +1,6 @@
-// Generated from c:\Users\Samuele Gervasi\My Drive\LIFE\Information\u005Cuniversity\Triennale Informatica\Terzo Anno\Stage e Tesi\Reversible Computing\OrtrOPythonTranslator\grun test\PythonLexer.g4 by ANTLR 4.8
+package antlr;
+
+// Generated from PythonLexer.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -10,7 +12,7 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class PythonLexer extends PythonLexerBase {
-	static { RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
