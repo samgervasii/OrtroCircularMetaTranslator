@@ -10,6 +10,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     private String _bwd_name_function = ""; // def name_bwd(...): function backward to push into the
                                             // _bwd_entire_function
     private String _bwd_body_function = ""; // the body of the bwd function, a group of _rev_instructions
+    private String _bwd_return_instruction = ""; // the return instruction
     private String _bwd_entire_function = ""; // our entire bwd function
     private boolean _args_flag = false; // arguments flag for rev definition
 
@@ -33,7 +34,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
         this._rev_instruction += atom;
     }
 
-    protected void rmLastCharRevInstruction(){ // = removeLastChar but on String _rev_instruction
+    protected void rmLastCharRevInstruction() { // = removeLastChar but on String _rev_instruction
         this._rev_instruction = _rev_instruction.substring(0, _rev_instruction.length() - 1);
     }
 
@@ -55,6 +56,18 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
     protected void resetBwdBodyFunction() {
         this._bwd_body_function = "";
+    }
+
+    protected String getBwdReturnInstruction() {
+        return this._bwd_return_instruction;
+    }
+
+    protected void addToBwdReturnInstruction(String atom) {
+        this._bwd_return_instruction += atom;
+    }
+
+    protected void resetBwdReturnInstruction(){
+        this._bwd_return_instruction = "";
     }
 
     protected String getBwdEntireFunction() {
@@ -80,7 +93,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     protected void applyIndentsRevInstruction() { // = applyIndents but on strin _rev_instruction
         for (int i = 0; i < getIndents(); i++) {
             addToRevInstruction(" "); // add white space based on number on indents, that can only be a multiple of
-                              // IND (4)
+            // IND (4)
+        }
+    }
+
+    protected void applyIndentsBwdReturnInstruction(){
+        for (int i = 0; i < getIndents(); i++) {
+            addToBwdReturnInstruction(" "); // add white space based on number on indents, that can only be a multiple of
+            // IND (4)
         }
     }
 
@@ -125,9 +145,17 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
             addToTarget(node.getText() + " ");
             addToRevInstruction("+=" + " "); // rev op
             break;
+        case "return":
+            addToTarget(node.getText() + " ");
+            addToBwdReturnInstruction(node.getText() + " ");
+            break;
         default:
             addToTarget(node.getText() + " ");
-            addToRevInstruction(node.getText() + " ");
+            if (!getBwdReturnInstruction().equals("")) { //return is reached, so this is return argument
+                addToBwdReturnInstruction(node.getText() + " ");
+            } else {
+                addToRevInstruction(node.getText() + " ");
+            }
         }
     }
 
@@ -140,8 +168,10 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
     @Override
     public void exitRev_func(PythonParser.Rev_funcContext ctx) {
-        setBwdEntireFunction(getBwdNameFunction() + getBwdBodyFunction()); // _bwd_entire_function = _bwd_name_function and _bwd_body_function
+        setBwdEntireFunction(getBwdNameFunction() + getBwdBodyFunction() + getBwdReturnInstruction()); // _bwd_entire_function = _bwd_name_function
+                                                                           // and _bwd_body_function
         addToTarget(getBwdEntireFunction());
+        resetBwdReturnInstruction();
         resetBwdBodyFunction();
         resetBwdEntireFunction();
         setRevMode(0); // exit the reverse listening
@@ -187,6 +217,19 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     }
 
     @Override
+    public void enterRev_return(PythonParser.Rev_returnContext ctx) {
+        if (getIndents() >= 0) {
+            applyIndents();
+            applyIndentsBwdReturnInstruction();
+        }
+    }
+
+    @Override
+    public void exitRev_return(PythonParser.Rev_returnContext ctx) {
+        addToTarget("\n");
+    }
+
+    @Override
     public void visitTerminal(TerminalNode node) {
         if (node.getText() != "<EOF>") { // do not print <EOF>
             if (getRevMode() == 1) {
@@ -199,7 +242,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
             if (node.getText() == "") { // redundant newline or indents
                 removeLastChar();
-                if(getRevMode() == 2){
+                if (getRevMode() == 2 && !getRevInstruction().equals("")) {
                     rmLastCharRevInstruction();
                 }
             }

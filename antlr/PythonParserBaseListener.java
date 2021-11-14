@@ -1,5 +1,4 @@
 package antlr;
-
 // Generated from PythonParser.g4 by ANTLR 4.9.2
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -156,6 +155,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRev_expr(PythonParser.Rev_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRev_return(PythonParser.Rev_returnContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRev_return(PythonParser.Rev_returnContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -68,7 +68,8 @@ compound_stmt
 
 
 rev_stmt //reversible instruction Gervasi Samuele
-    : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK                               #rev_expr                        
+    : testlist_star_expr rev_op (yield_expr | testlist) LINE_BREAK                               #rev_expr
+    | RETURN testlist+ LINE_BREAK                                                                #rev_return                         
     ;
 
 rev_op //reversible assignment Gervasi Samuele
@@ -121,7 +122,7 @@ classdef
 
 funcdef
     : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite             #func
-    | REV name OPEN_PAREN typedargslist? CLOSE_PAREN COLON rev_block                              #rev_func        //Gervasi Samuele                          
+    | REV name OPEN_PAREN typedargslist+ CLOSE_PAREN COLON rev_block                              #rev_func        //Gervasi Samuele                          
     ;
 
 // python 3 paramters
