@@ -9,10 +9,8 @@ def ciao_bwd ( x , y ) :
 def main ( ) : 
     x = 3 
     y = 5 
-    ciao_fwd ( x , y ) 
-    print ( x ) 
-    print ( y ) 
-    ciao_bwd ( x , y ) 
-    print ( x ) 
-    print ( y ) 
+    f = ciao_fwd ( x , y ) 
+    print ( f ) 
+    b = ciao_bwd ( f [ 0 ] , f [ 1 ] ) 
+    print ( b ) 
 main ( ) 
