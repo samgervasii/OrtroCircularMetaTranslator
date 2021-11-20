@@ -2,6 +2,7 @@ import java.io.*;
 import antlr.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+import java.util.*;
 
 public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends GrammarNameBaseListener
 
@@ -13,6 +14,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     private String _bwd_return_instruction = ""; // the return instruction
     private String _bwd_entire_function = ""; // our entire bwd function
     private boolean _args_flag = false; // arguments flag for rev definition
+    private HashMap<String, String> _functions_table = new HashMap<String, String>();
 
     protected int getRevMode() {
         return this._rev_mode;
@@ -66,7 +68,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
         this._bwd_return_instruction += atom;
     }
 
-    protected void resetBwdReturnInstruction(){
+    protected void resetBwdReturnInstruction() {
         this._bwd_return_instruction = "";
     }
 
@@ -90,6 +92,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
         this._args_flag = args_flag;
     }
 
+    protected HashMap getFunctionsTable(){
+        return this._functions_table;
+    }
+
+    protected void putOnFunctionsTable(String func){
+        this._functions_table.put(func+"_fwd", func+"_bwd");
+    }
+
     protected void applyIndentsRevInstruction() { // = applyIndents but on strin _rev_instruction
         for (int i = 0; i < getIndents(); i++) {
             addToRevInstruction(" "); // add white space based on number on indents, that can only be a multiple of
@@ -97,9 +107,10 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
         }
     }
 
-    protected void applyIndentsBwdReturnInstruction(){
+    protected void applyIndentsBwdReturnInstruction() {
         for (int i = 0; i < getIndents(); i++) {
-            addToBwdReturnInstruction(" "); // add white space based on number on indents, that can only be a multiple of
+            addToBwdReturnInstruction(" "); // add white space based on number on indents, that can only be a multiple
+                                            // of
             // IND (4)
         }
     }
@@ -126,6 +137,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
             if (!getArgsFlag()) { // we are writine the function name so double it with postfix fwd and bwd
                 addToTarget(node.getText() + "_fwd ");
                 addToBwdNameFunction(node.getText() + "_bwd ");
+                putOnFunctionsTable(node.getText());
             } else { // we are writing arguments
                 addToTarget(node.getText() + " ");
                 addToBwdNameFunction(node.getText() + " ");
@@ -151,7 +163,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
             break;
         default:
             addToTarget(node.getText() + " ");
-            if (!getBwdReturnInstruction().equals("")) { //return is reached, so this is return argument
+            if (!getBwdReturnInstruction().equals("")) { // return is reached, so this is return argument
                 addToBwdReturnInstruction(node.getText() + " ");
             } else {
                 addToRevInstruction(node.getText() + " ");
@@ -168,8 +180,10 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
     @Override
     public void exitRev_func(PythonParser.Rev_funcContext ctx) {
-        setBwdEntireFunction(getBwdNameFunction() + getBwdBodyFunction() + getBwdReturnInstruction()); // _bwd_entire_function = _bwd_name_function
-                                                                           // and _bwd_body_function
+        setBwdEntireFunction(getBwdNameFunction() + getBwdBodyFunction() + getBwdReturnInstruction()); // _bwd_entire_function
+                                                                                                       // =
+                                                                                                       // _bwd_name_function
+        // and _bwd_body_function
         addToTarget(getBwdEntireFunction());
         resetBwdReturnInstruction();
         resetBwdBodyFunction();
