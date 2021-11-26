@@ -72,10 +72,6 @@ rev_stmt //reversible instruction Gervasi Samuele
     | RETURN testlist+ LINE_BREAK                                                                #rev_return                         
     ;
 
-rev_op //reversible assignment Gervasi Samuele
-    : 
-    ;
-
 rev_block //Gervasi Samuele
     : LINE_BREAK INDENT rev_stmt+ DEDENT 
     ;
