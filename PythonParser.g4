@@ -68,7 +68,7 @@ compound_stmt
 
 
 rev_stmt //reversible instruction Gervasi Samuele
-    : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) (yield_expr | testlist) LINE_BREAK        #rev_expr
+    : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) testlist LINE_BREAK                       #rev_expr
     | RETURN testlist+ LINE_BREAK                                                                #rev_return                         
     ;
 

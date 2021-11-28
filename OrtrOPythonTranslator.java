@@ -13,13 +13,16 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     if (result == null)
       result = "";
     int n = node.getChildCount();
-    for (int i = n - 1; i > 0; i--) {
+    for (int i = 0; i < n; i++) {
       if (!shouldVisitNextChild(node, result)) {
         break;
       }
       ParseTree c = node.getChild(i);
       String childResult = c.accept(this);
-      result = childResult + result;
+      if (childResult.contains("return"))
+        result += childResult;
+      else
+        result = childResult + result;
     }
     return result;
   }
@@ -63,10 +66,20 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
   @Override
   public String visitRev_expr(PythonParser.Rev_exprContext ctx) {
-    if (_indents > 0) {
-      return applyIndents() + visitChildren(ctx) + "\n";
+    String left = visit(ctx.testlist_star_expr());
+    String right = visit(ctx.testlist());
+    String op = ctx.op.getText();
+    if (_rev_visit) {
+      if (op.contains("+="))
+        op = "-= ";
+      else
+        op = "+= ";
     }
-    return visitChildren(ctx) + "\n";
+    String expr = left + op + right;
+    if (_indents > 0) {
+      return applyIndents() + expr + "\n";
+    }
+    return expr + "\n";
   }
 
   @Override
