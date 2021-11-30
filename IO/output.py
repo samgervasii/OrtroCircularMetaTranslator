@@ -1,11 +1,13 @@
 def ciao_fwd( x , y ) :
-    x +=4 
-    y -=10 
+    x += a ( y , x , 3 ) 
+    y -= 10 
     return x , y 
 def ciao_bwd( x , y ) :
     y += 10 
-    x -= 4 
+    x -= a ( y , x , 3 ) 
     return x , y 
+def a ( b , c , d ) : 
+    return b + c + d 
 def main ( ) : 
     x = 3 
     y = 5 

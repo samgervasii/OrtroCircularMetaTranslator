@@ -147,6 +147,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterRev_func_def_stmt(PythonParser.Rev_func_def_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRev_func_def_stmt(PythonParser.Rev_func_def_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterRev_expr(PythonParser.Rev_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -303,13 +315,13 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunc(PythonParser.FuncContext ctx) { }
+	@Override public void enterFuncdef(PythonParser.FuncdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunc(PythonParser.FuncContext ctx) { }
+	@Override public void exitFuncdef(PythonParser.FuncdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

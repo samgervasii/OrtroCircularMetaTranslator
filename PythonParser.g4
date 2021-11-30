@@ -64,6 +64,7 @@ compound_stmt
     | TRY COLON suite (except_clause+ else_clause? finally_clause? | finally_clause) #try_stmt
     | ASYNC? WITH with_item (COMMA with_item)* COLON suite                           #with_stmt
     | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
+    | rev_func                                                                       #rev_func_def_stmt  
     ;
 
 
@@ -117,9 +118,12 @@ classdef
     ;
 
 funcdef
-    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite             #func
-    | REV name OPEN_PAREN typedargslist CLOSE_PAREN COLON rev_block                              #rev_func        //Gervasi Samuele                          
+    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite                              
     ;
+
+rev_func                                                                //Gervasi Samuele 
+    : REV name OPEN_PAREN typedargslist CLOSE_PAREN COLON rev_block
+    ;                                    
 
 // python 3 paramters
 // parameters list may have a trailing comma

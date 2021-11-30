@@ -82,6 +82,13 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code rev_func_def_stmt}
+	 * labeled alternative in {@link PythonParser#compound_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRev_func_def_stmt(PythonParser.Rev_func_def_stmtContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code rev_expr}
 	 * labeled alternative in {@link PythonParser#rev_stmt}.
 	 * @param ctx the parse tree
@@ -164,15 +171,13 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassdef(PythonParser.ClassdefContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code func}
-	 * labeled alternative in {@link PythonParser#funcdef}.
+	 * Visit a parse tree produced by {@link PythonParser#funcdef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunc(PythonParser.FuncContext ctx);
+	T visitFuncdef(PythonParser.FuncdefContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code rev_func}
-	 * labeled alternative in {@link PythonParser#funcdef}.
+	 * Visit a parse tree produced by {@link PythonParser#rev_func}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */

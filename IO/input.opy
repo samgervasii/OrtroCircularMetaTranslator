@@ -1,7 +1,10 @@
 rev ciao(x,y):
-    x += 4
+    x += a(y,x,3)
     y -= 10
     return x,y
+
+def a(b,c,d):
+    return b+c+d
 
 def main():
     x = 3
