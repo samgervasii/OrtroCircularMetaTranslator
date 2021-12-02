@@ -1,10 +1,10 @@
 def ciao_fwd( x , y ) :
-    x += a ( y , x , 3 ) 
+    x += a ( y , 1 , 3 ) 
     y -= 10 
     return x , y 
 def ciao_bwd( x , y ) :
     y += 10 
-    x -= a ( y , x , 3 ) 
+    x -= a ( y , 1 , 3 ) 
     return x , y 
 def a ( b , c , d ) : 
     return b + c + d 

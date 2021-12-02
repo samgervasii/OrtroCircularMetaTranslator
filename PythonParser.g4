@@ -75,7 +75,7 @@ rev_func
 //Gervasi Samuele 
 rev_stmt 
     : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) testlist LINE_BREAK                       #rev_expr
-    | RETURN testlist+ LINE_BREAK                                                                #rev_return                         
+    | RETURN testlist LINE_BREAK                                                                #rev_return                         
     ;
 
 //Gervasi Samuele 
