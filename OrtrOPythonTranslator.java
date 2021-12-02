@@ -7,10 +7,12 @@ import java.util.*;
 public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends GrammarNameBaseListener
 
   protected Set<String> _rev_args = new HashSet<String>(); //set of arguments in rev function
-  protected boolean _rev_visit = false; //indicates if we are visiting for the fwd or the bwd
+  protected Set<String> _rev_args_unavailable = new HashSet<String>();
+  protected boolean _bwd_visit = false; //indicates if we are visiting for the bwd
+  protected boolean _fwd_visit = false; //indicates if we are visiting for the bwd
   protected String[] _rule_names; //given a parser in a constructor defines all the names of rules
 
-  //constructor
+  //constructor with parser for _rule_names
   public OrtrOPythonTranslator(PythonParser parser) {
     this._rule_names = parser.getRuleNames();
   }
@@ -38,18 +40,23 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   //manually make all the visits to complete the fwd and bwd functions
   @Override
   public String visitRev_func(PythonParser.Rev_funcContext ctx) {
-    String rule_rev = "def ";
+    _fwd_visit = true;
 
+    String rule_rev = "def ";
     String name_fwd = visit(ctx.name()) + "_fwd ";
     name_fwd = name_fwd.replaceAll(" ", "");
     String args = "( " + visit(ctx.typedargslist()) + ") :";
     String rev_block_fwd = visit(ctx.rev_block());
     String func_fwd = rule_rev + name_fwd + args + rev_block_fwd;
-    _rev_visit = true;
+
+    _fwd_visit = false;
+    _bwd_visit = true;
+
     String name_bwd = name_fwd.replace("fwd", "bwd");
     String rev_block_bwd = visit(ctx.rev_block());
     String func_bwd = rule_rev + name_bwd + args + rev_block_bwd;
-    _rev_visit = false;
+
+    _bwd_visit = false;
 
     if (_indents > 0) {
       return applyIndents() + func_fwd + "\n" + func_bwd;
@@ -62,7 +69,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   public String visitRev_block(PythonParser.Rev_blockContext ctx) {
     _indents += _IND;
     String block = "";
-    if (!_rev_visit) {
+    if (!_bwd_visit) {
       block = "\n" + visitChildren(ctx);
       block = block.substring(0, block.length() - 1); // delete redundant NEW LINE
       _indents -= _IND;
@@ -78,9 +85,11 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   @Override
   public String visitRev_expr(PythonParser.Rev_exprContext ctx) {
     String left = visit(ctx.testlist_star_expr());
+    _rev_args_unavailable.add(left);
     String right = visit(ctx.testlist());
+    _rev_args_unavailable.remove(left);
     String op = ctx.op.getText() + " ";
-    if (_rev_visit) {
+    if (_bwd_visit) {
       if (op.contains("+="))
         op = "-= ";
       else
@@ -102,28 +111,25 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return visitChildren(ctx) + "\n";
   }
 
-  //add arguments to the Set if we are in a rev block
+  //add arguments to the Set if we are visiting rev_func in fwd
   @Override
   public String visitDef_parameter(PythonParser.Def_parameterContext ctx) {
-    int rev_func_parent_index = ctx.parent.parent.parent.getRuleIndex();
-    if (_rule_names[rev_func_parent_index].contains("rev_func")) {
-      _rev_args.add(visitChildren(ctx).replaceAll(" ", ""));
+    String param = visitChildren(ctx);
+    if (_fwd_visit) {
+      _rev_args.add(param.replaceAll(" ", ""));
     }
-    return visitChildren(ctx);
+    return param;
   }
   
   //if in a function called under rev block occures a variable in the Set, throw warning (why 2?)
   @Override
   public String visitArgument(PythonParser.ArgumentContext ctx) {
     String terminal_argument = visitChildren(ctx);
-    RuleContext rev_stmt = ctx;
-    for (int i = 0; i < 9; i++)
-      rev_stmt = rev_stmt.parent;
-    int rev_stmt_parent_index = rev_stmt.getRuleIndex();
-    if (_rule_names[rev_stmt_parent_index].contains("rev_stmt")) {
-      if (_rev_args.contains(terminal_argument.replaceAll(" ", ""))) {
-        System.out.println("WARNING: a function in a rev block is calling an intern variable from these: "+ _rev_args);
+    if(_fwd_visit){
+      if(_rev_args_unavailable.contains(terminal_argument.replaceAll(" ", ""))){
+        System.out.println("WARNING");
       }
+
     }
     return terminal_argument;
   }
