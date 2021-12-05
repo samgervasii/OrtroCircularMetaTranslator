@@ -1,9 +1,9 @@
 def ciao_fwd( x , y ) :
     x += a ( y , 1 , 3 ) 
-    y -= 10 
+    y -= x 
     return x , y 
 def ciao_bwd( x , y ) :
-    y += 10 
+    y += x 
     x -= a ( y , 1 , 3 ) 
     return x , y 
 def a ( b , c , d ) : 
@@ -11,6 +11,7 @@ def a ( b , c , d ) :
 def main ( ) : 
     x = 3 
     y = 5 
+    print ( ( x , y ) ) 
     f = ciao_fwd ( x , y ) 
     print ( f ) 
     b = ciao_bwd ( f [ 0 ] , f [ 1 ] ) 

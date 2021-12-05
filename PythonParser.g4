@@ -75,12 +75,22 @@ rev_func
 //Gervasi Samuele 
 rev_stmt 
     : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) testlist LINE_BREAK                       #rev_expr
-    | RETURN testlist LINE_BREAK                                                                #rev_return                         
+    | IF cond=test COLON rev_suite else_clause?                                                  #rev_if                                                                                        
     ;
 
 //Gervasi Samuele 
 rev_block
-    : LINE_BREAK INDENT rev_stmt+ DEDENT 
+    : LINE_BREAK INDENT rev_stmt+ rev_return DEDENT 
+    ;
+
+//Gervasi Samuele
+rev_suite
+    : LINE_BREAK INDENT rev_stmt+ DEDENT
+    ;
+
+//Gervasi Samuele
+rev_return
+    : RETURN testlist LINE_BREAK
     ;
 
 suite
