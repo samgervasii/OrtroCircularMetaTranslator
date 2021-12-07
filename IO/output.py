@@ -1,19 +1,19 @@
-def ciao_fwd( x , y ) :
-    x += a ( y , 1 , 3 ) 
+def calc ( b , c , d ) : 
+    return b + c + d 
+def func_fwd( x , y ) :
+    x += calc ( y , 1 , 3 ) 
     y -= x 
     return x , y 
-def ciao_bwd( x , y ) :
+def func_bwd( x , y ) :
     y += x 
-    x -= a ( y , 1 , 3 ) 
+    x -= calc ( y , 1 , 3 ) 
     return x , y 
-def a ( b , c , d ) : 
-    return b + c + d 
-def main ( ) : 
+def exect ( ) : 
     x = 3 
     y = 5 
     print ( ( x , y ) ) 
-    f = ciao_fwd ( x , y ) 
+    f = func_fwd ( x , y ) 
     print ( f ) 
-    b = ciao_bwd ( f [ 0 ] , f [ 1 ] ) 
+    b = func_bwd ( f [ 0 ] , f [ 1 ] ) 
     print ( b ) 
-main ( ) 
+exect ( ) 
