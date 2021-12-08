@@ -86,6 +86,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String left = visit(ctx.testlist_star_expr());
     if (_fwd_visit)
       _rev_args_unavailable.add(literal(left));
+      _rev_args.remove(literal(left));
     String right = visit(ctx.testlist());
     if (_fwd_visit) {
       if(literal(left).equals(literal(right))){
@@ -93,6 +94,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
         System.exit(1);
       }
       _rev_args_unavailable.remove(literal(left));
+      _rev_args.add(literal(left));
     }
     String op = ctx.op.getText() + " ";
     if (_bwd_visit) {
