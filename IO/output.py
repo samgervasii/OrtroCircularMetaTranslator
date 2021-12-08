@@ -14,6 +14,6 @@ def exect ( ) :
     print ( ( x , y ) ) 
     f = func_fwd ( x , y ) 
     print ( f ) 
-    b = func_bwd ( f [ 0 ] , f [ 1 ] ) 
-    print ( b ) 
+    f = func_bwd ( f [ 0 ] , f [ 1 ] ) 
+    print ( f ) 
 exect ( ) 
