@@ -1,4 +1,4 @@
-# OrtrOPythonTranslator
+# OrtroCircularMetaTranslator opy -> py
 
 Source of the g4 python files: https://github.com/antlr/grammars-v4
 
