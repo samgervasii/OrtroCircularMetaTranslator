@@ -1,8 +1,7 @@
-def calc(b,c,d):
-    return b+c+d
+def calc(b,c):
+    return b+c
 rev func(x,y):
-    x += calc(y,1,3)
-    y -= x
+    x += calc(0,1)
     return x,y
 def exect():
     x = 3

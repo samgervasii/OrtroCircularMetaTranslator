@@ -1,12 +1,10 @@
-def calc ( b , c , d ) : 
-    return b + c + d 
+def calc ( b , c ) : 
+    return b + c 
 def func_fwd( x , y ) :
-    x += calc ( y , 1 , 3 ) 
-    y -= x 
+    x += calc ( 0 , 1 ) 
     return x , y 
 def func_bwd( x , y ) :
-    y += x 
-    x -= calc ( y , 1 , 3 ) 
+    x -= calc ( 0 , 1 ) 
     return x , y 
 def exect ( ) : 
     x = 3 
