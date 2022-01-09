@@ -86,10 +86,10 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String left = visit(ctx.testlist_star_expr());
     if (_fwd_visit)
       _rev_args_unavailable.add(literal(left));
-      _rev_args.remove(literal(left));
+    _rev_args.remove(literal(left));
     String right = visit(ctx.testlist());
     if (_fwd_visit) {
-      if(literal(left).equals(literal(right))){
+      if (right.contains(literal(left) + " ")) { //literal(left).equals(literal(right))
         System.err.println("ERROR! An unavailable variable is being modified in the same valutation by itself.");
         System.exit(1);
       }
@@ -159,6 +159,11 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       }
     }
     return terminal_argument;
+  }
+
+  @Override
+  public String visitRev_if(PythonParser.Rev_ifContext ctx) {
+    return visitChildren(ctx);
   }
 
   // Main
