@@ -102,6 +102,13 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRev_expr(PythonParser.Rev_exprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code rev_assign}
+	 * labeled alternative in {@link PythonParser#rev_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRev_assign(PythonParser.Rev_assignContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code rev_if}
 	 * labeled alternative in {@link PythonParser#rev_stmt}.
 	 * @param ctx the parse tree

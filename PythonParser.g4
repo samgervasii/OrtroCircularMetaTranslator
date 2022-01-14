@@ -75,6 +75,7 @@ rev_func
 //Gervasi Samuele 
 rev_stmt 
     : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) testlist LINE_BREAK                       #rev_expr
+    | OPEN_PAREN testlist_comp CLOSE_PAREN ASSIGN name LINE_BREAK                                #rev_assign
     | IF cond=test COLON rev_suite else_clause? LINE_BREAK                                       #rev_if                                                                                        
     ;
 

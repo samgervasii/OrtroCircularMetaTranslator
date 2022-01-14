@@ -9,7 +9,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected Set<String> _rev_args = new HashSet<String>(); // set of arguments in rev function
   protected Set<String> _rev_args_unavailable = new HashSet<String>();
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
-  protected boolean _fwd_visit = false; // indicates if we are visiting for the bwd
+  protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -36,6 +36,15 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return result;
   }
 
+  public String argStringify(Set<String> set) {
+    String args = "( ";
+    for (String arg : set) {
+      args += arg + " , ";
+    }
+    args = args.substring(0, args.length() - 2);
+    return args + ")";
+  }
+
   // manually make all the visits to complete the fwd and bwd functions
   @Override
   public String visitRev_func(PythonParser.Rev_funcContext ctx) {
@@ -52,10 +61,13 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     _bwd_visit = true;
 
     String name_bwd = name_fwd.replace("fwd", "bwd");
+    String bwd_args = argStringify(_rev_args) + " :";
     String rev_block_bwd = visit(ctx.rev_block());
-    String func_bwd = rule_rev + name_bwd + args + rev_block_bwd;
+    String func_bwd = rule_rev + name_bwd + bwd_args + rev_block_bwd;
 
     _bwd_visit = false;
+    _rev_args.clear();
+    _rev_args_unavailable.clear();
 
     if (_indents > 0) {
       return applyIndents() + func_fwd + "\n" + func_bwd;
@@ -84,12 +96,18 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   @Override
   public String visitRev_expr(PythonParser.Rev_exprContext ctx) {
     String left = visit(ctx.testlist_star_expr());
-    if (_fwd_visit)
-      _rev_args_unavailable.add(literal(left));
-    _rev_args.remove(literal(left));
+    if (_fwd_visit) {
+      if (_rev_args_unavailable.contains(literal(left))) {
+        System.err.println("ERROR! An unavailable variable is being modified");
+        System.exit(1);
+      } else {
+        _rev_args_unavailable.add(literal(left));
+        _rev_args.remove(literal(left));
+      }
+    }
     String right = visit(ctx.testlist());
     if (_fwd_visit) {
-      if (right.contains(literal(left) + " ")) {
+      if (right.contains(literal(left) + " ") && _rev_args_unavailable.contains(literal(left))) {
         System.err.println("ERROR! An unavailable variable is being modified in the same valutation by itself.");
         System.exit(1);
       }
@@ -110,25 +128,65 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return expr + "\n";
   }
 
+  @Override
+  public String visitRev_if(PythonParser.Rev_ifContext ctx) {
+    return visitChildren(ctx);
+  }
+
+  @Override
+  public String visitRev_assign(PythonParser.Rev_assignContext ctx) {
+    String new_variables = visit(ctx.testlist_comp());
+    String left_tuple = "( " + new_variables + ")";
+    String op = " = ";
+    String right = visit(ctx.name());
+    if (_fwd_visit) {
+      _rev_args_unavailable.add(literal(right));
+      _rev_args.remove(literal(right));
+      for (String arg : literal(new_variables).split(",")) {
+        _rev_args.add(literal(arg));
+      }
+    }
+    if (_bwd_visit) {
+      _rev_args.add(literal(right));
+      _rev_args_unavailable.remove(literal(right));
+      for (String arg : literal(new_variables).split(",")) {
+        _rev_args_unavailable.add(literal(arg));
+        _rev_args.remove(literal(arg));
+      }
+    }
+    String expr = left_tuple + op + right;
+    if (_bwd_visit) {
+      expr = right + op + left_tuple;
+    }
+    if (_indents > 0) {
+      return applyIndents() + expr + "\n";
+    }
+    return expr + "\n";
+  }
+
   // check if arguments are equals to definition arguments and not more or less
   @Override
   public String visitRev_return(PythonParser.Rev_returnContext ctx) {
     String ret = "return ";
     String args = visit(ctx.testlist());
     if (_fwd_visit) {
-      String[] arguments = literal(args).split(",");
-      for (String arg : arguments) {
-        if (_rev_args.contains(arg)) {
-          _rev_args.remove(arg);
+      Set<String> temp_set = new HashSet<String>(_rev_args);
+      for (String arg : literal(args).split(",")) {
+        if (temp_set.contains(arg)) {
+          temp_set.remove(arg);
         } else {
           System.err.println("ERROR! return statement contains more arguments or different arguments than definition");
           System.exit(1);
         }
       }
-      if (!_rev_args.isEmpty()) {
+      if (!temp_set.isEmpty()) {
         System.err.println("ERROR! return statement has less number of arguments than definition");
         System.exit(1);
       }
+    }
+    if (_bwd_visit) {
+      args = argStringify(_rev_args).replace("(", "");
+      args = args.replace(")", "");
     }
     String end = ret + args;
     if (_indents > 0) {
@@ -159,11 +217,6 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       }
     }
     return terminal_argument;
-  }
-
-  @Override
-  public String visitRev_if(PythonParser.Rev_ifContext ctx) {
-    return visitChildren(ctx);
   }
 
   // Main

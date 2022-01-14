@@ -1,7 +1,7 @@
 def calc(b,c):
     return b+c
 rev func(x,y):
-    x += calc(0,1)
+    x += calc(1,1)
     return x,y
 def exect():
     x = 3
@@ -12,3 +12,11 @@ def exect():
     f = func_bwd(f[0],f[1])
     print(f)
 exect()
+
+rev ass(x):
+    (i,j) = x
+    i += 3
+    return i,j
+
+
+
