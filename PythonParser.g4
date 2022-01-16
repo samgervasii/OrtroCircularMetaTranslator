@@ -76,7 +76,7 @@ rev_func
 rev_stmt 
     : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) testlist LINE_BREAK                       #rev_expr
     | OPEN_PAREN testlist_comp CLOSE_PAREN ASSIGN name LINE_BREAK                                #rev_assign
-    | IF cond=test COLON rev_suite else_clause? LINE_BREAK                                       #rev_if                                                                                        
+    | IF cond=test COLON rev_suite else_clause?                                                  #rev_if                                                                                       
     ;
 
 //Gervasi Samuele 
@@ -289,8 +289,8 @@ logical_test
     | logical_test op=OR logical_test
     ;
 
-comparison
-    : comparison (LESS_THAN | GREATER_THAN | EQUALS | GT_EQ | LT_EQ | NOT_EQ_1 | NOT_EQ_2 | optional=NOT? IN | IS optional=NOT?) comparison
+comparison //Gervasi Samuele (left & right)
+    : left=comparison (LESS_THAN | GREATER_THAN | EQUALS | GT_EQ | LT_EQ | NOT_EQ_1 | NOT_EQ_2 | optional=NOT? IN | IS optional=NOT?) right=comparison
     | expr
     ;
 
