@@ -1,9 +1,10 @@
 def calc(b,c):
     return b+c
 
-rev func(x,y):
+rev func(x,y,yi):
     x += calc(1,1)
-    return x,y
+    y += yi
+    return x,y,yi
 
 rev ass(x):
     (i,j) = x

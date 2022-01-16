@@ -9,7 +9,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected Stack<String> _rev_args_unavailable = new Stack<String>();
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
-  protected boolean _logical_visit = false; // indicates if we are visiting for the conditional branching
+  protected int _iterable_disponibility = 0; //false; // indicates if we are visiting for the conditional branching
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -100,10 +100,9 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       if (_rev_args_unavailable.contains(literal(left))) {
         System.err.println("ERROR! An unavailable variable is being modified");
         System.exit(1);
-      } else {
-        _rev_args_unavailable.add(literal(left));
-        _rev_args.remove(literal(left));
       }
+      _rev_args_unavailable.add(literal(left));
+      _rev_args.remove(literal(left));
     }
     String right = visit(ctx.testlist());
     if (_fwd_visit) {
@@ -130,17 +129,21 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
   @Override
   public String visitRev_if(PythonParser.Rev_ifContext ctx) {
-    System.out.println(_indents);
-    _logical_visit = true;
+    _iterable_disponibility = 0;
     String logical_test = visit(ctx.test());
-    _logical_visit = false;
     String suite = visit(ctx.rev_suite());
     String if_stmt = ctx.IF() + " " + logical_test + ctx.COLON() + " " + suite;
     if (ctx.else_clause() != null) {
       String else_stmt = visit(ctx.else_clause());
+      for(int i = 0; i < _iterable_disponibility ; i++){
+        _rev_args.add(_rev_args_unavailable.pop());
+      }
       return applyIndents() + if_stmt + else_stmt + "\n";
     }
     System.out.println(_rev_args_unavailable);
+    for(int i = 0; i < _iterable_disponibility ; i++){
+      _rev_args.add(_rev_args_unavailable.pop());
+    }
     return applyIndents() + if_stmt + "\n";
   }
 
@@ -152,12 +155,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   @Override
   public String visitName(PythonParser.NameContext ctx) {
     String name = visitChildren(ctx);
-    if(_logical_visit && _fwd_visit){
-      if(_rev_args_unavailable.contains(literal(name))){
+    if (_iterable_disponibility != -1 && _fwd_visit) {
+      if (_rev_args_unavailable.contains(literal(name))) {
         System.err.println("ERROR! the conditional variable is not available");
         System.exit(1);
       }
-      _rev_args_unavailable.add(literal(name));
+      _rev_args_unavailable.push(literal(name));
+      _rev_args.remove(literal(name));
+      _iterable_disponibility++;
     }
     return name;
   }
@@ -178,7 +183,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String op = " " + ctx.ASSIGN() + " ";
     String right = visit(ctx.name());
     if (_fwd_visit) {
-      _rev_args_unavailable.add(literal(right));
+      // _rev_args_unavailable.add(literal(right));
       _rev_args.remove(literal(right));
       for (String arg : literal(new_variables).split(",")) {
         _rev_args.add(literal(arg));
