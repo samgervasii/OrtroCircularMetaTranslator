@@ -9,7 +9,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected Stack<String> _rev_args_unavailable = new Stack<String>();
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
-  protected int _iterable_disponibility = 0; //false; // indicates if we are visiting for the conditional branching
+  protected int _iterable_disponibility = -1; //false; // indicates if we are visiting for the conditional branching
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
