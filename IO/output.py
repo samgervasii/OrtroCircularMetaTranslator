@@ -9,10 +9,26 @@ def func_bwd ( yi , x , y ) :
     x -= calc ( 1 , 1 ) 
     return yi , x , y 
 def ass_fwd ( x , y ) :
-    z  = ( x , y )
-    z += 3 
-    return z 
-def ass_bwd ( z ) :
-    z -= 3 
-    ( x , y ) = z 
+    ( i , j ) = y 
+    i += 3 
+    return i , j , x 
+def ass_bwd ( x , i , j ) :
+    i -= 3 
+    y  = ( i , j )
     return x , y 
+def branch_fwd ( x , y , z , k ) :
+    if x == 3 : 
+        ( i , j ) = y 
+        z += 51 
+        else : 
+        ( i , j ) = y 
+        k += 5 
+    return x , y , z , k 
+def branch_bwd ( x , y , z , k ) :
+    if x == 3 : 
+        y  = ( i , j )
+        z -= 51 
+        else : 
+        y  = ( i , j )
+        k -= 5 
+    return x , y , z , k 

@@ -1139,8 +1139,8 @@ public class PythonParser extends PythonParserBase {
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
-		public Else_clauseContext else_clause() {
-			return getRuleContext(Else_clauseContext.class,0);
+		public Rev_elseContext rev_else() {
+			return getRuleContext(Rev_elseContext.class,0);
 		}
 		public Rev_ifContext(Rev_stmtContext ctx) { copyFrom(ctx); }
 		@Override
@@ -1303,7 +1303,7 @@ public class PythonParser extends PythonParserBase {
 				if (_la==ELSE) {
 					{
 					setState(269);
-					else_clause();
+					rev_else();
 					}
 				}
 
@@ -1818,8 +1818,8 @@ public class PythonParser extends PythonParserBase {
 	public static class Rev_elseContext extends ParserRuleContext {
 		public TerminalNode ELSE() { return getToken(PythonParser.ELSE, 0); }
 		public TerminalNode COLON() { return getToken(PythonParser.COLON, 0); }
-		public Rev_blockContext rev_block() {
-			return getRuleContext(Rev_blockContext.class,0);
+		public Rev_suiteContext rev_suite() {
+			return getRuleContext(Rev_suiteContext.class,0);
 		}
 		public Rev_elseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1851,7 +1851,7 @@ public class PythonParser extends PythonParserBase {
 			setState(330);
 			match(COLON);
 			setState(331);
-			rev_block();
+			rev_suite();
 			}
 		}
 		catch (RecognitionException re) {
@@ -7712,7 +7712,7 @@ public class PythonParser extends PythonParserBase {
 		"\5\2\2\u0103\u0113\3\2\2\2\u0104\u0105\5h\65\2\u0105\u0106\7\64\2\2\u0106"+
 		"\u0107\t\3\2\2\u0107\u0108\5b\62\2\u0108\u0109\t\4\2\2\u0109\u010a\7\5"+
 		"\2\2\u010a\u0113\3\2\2\2\u010b\u010c\7\17\2\2\u010c\u010d\5L\'\2\u010d"+
-		"\u010e\7\61\2\2\u010e\u0110\5\24\13\2\u010f\u0111\5\36\20\2\u0110\u010f"+
+		"\u010e\7\61\2\2\u010e\u0110\5\24\13\2\u010f\u0111\5 \21\2\u0110\u010f"+
 		"\3\2\2\2\u0110\u0111\3\2\2\2\u0111\u0113\3\2\2\2\u0112\u00f8\3\2\2\2\u0112"+
 		"\u00fd\3\2\2\2\u0112\u0104\3\2\2\2\u0112\u010b\3\2\2\2\u0113\21\3\2\2"+
 		"\2\u0114\u0115\7\5\2\2\u0115\u0117\7\3\2\2\u0116\u0118\5\20\t\2\u0117"+
@@ -7732,8 +7732,8 @@ public class PythonParser extends PythonParserBase {
 		"\u0141\7\5\2\2\u0141\33\3\2\2\2\u0142\u0143\7\20\2\2\u0143\u0144\5L\'"+
 		"\2\u0144\u0145\7\61\2\2\u0145\u0146\5\30\r\2\u0146\35\3\2\2\2\u0147\u0148"+
 		"\7\21\2\2\u0148\u0149\7\61\2\2\u0149\u014a\5\30\r\2\u014a\37\3\2\2\2\u014b"+
-		"\u014c\7\21\2\2\u014c\u014d\7\61\2\2\u014d\u014e\5\22\n\2\u014e!\3\2\2"+
-		"\2\u014f\u0150\7\27\2\2\u0150\u0151\7\61\2\2\u0151\u0152\5\30\r\2\u0152"+
+		"\u014c\7\21\2\2\u014c\u014d\7\61\2\2\u014d\u014e\5\24\13\2\u014e!\3\2"+
+		"\2\2\u014f\u0150\7\27\2\2\u0150\u0151\7\61\2\2\u0151\u0152\5\30\r\2\u0152"+
 		"#\3\2\2\2\u0153\u0156\5L\'\2\u0154\u0155\7\f\2\2\u0155\u0157\5\\/\2\u0156"+
 		"\u0154\3\2\2\2\u0156\u0157\3\2\2\2\u0157%\3\2\2\2\u0158\u0166\7\31\2\2"+
 		"\u0159\u0164\5L\'\2\u015a\u015b\6\24\2\2\u015b\u015c\7\60\2\2\u015c\u015d"+

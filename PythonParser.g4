@@ -77,7 +77,7 @@ rev_stmt
     : testlist_star_expr op=( ADD_ASSIGN | SUB_ASSIGN) testlist LINE_BREAK                       #rev_expr
     | (OPEN_PAREN|OPEN_BRACE) testlist_comp (CLOSE_PAREN|CLOSE_BRACE) ASSIGN name LINE_BREAK     #rev_alloc
     | name ASSIGN (OPEN_PAREN|OPEN_BRACE) testlist_comp (CLOSE_PAREN|CLOSE_BRACE) LINE_BREAK     #rev_dealloc
-    | IF cond=test COLON rev_suite else_clause?                                                  #rev_if                                                                                       
+    | IF cond=test COLON rev_suite rev_else?                                                  #rev_if                                                                                       
     ;
 
 //Gervasi Samuele 
@@ -113,7 +113,7 @@ else_clause
     ;
 
 rev_else //Gervasi Samuele
-    : ELSE COLON rev_block
+    : ELSE COLON rev_suite
     ;
 
 finally_clause

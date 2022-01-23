@@ -2,6 +2,7 @@ import java.io.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 
 public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends GrammarNameBaseListener
 
@@ -9,7 +10,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected Set<String> _rev_args_unavailable = new HashSet<String>();
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
-  protected int _iterable_disponibility = -1; // false; // indicates if we are visiting for the conditional branching
+  protected boolean _conditional_visit = false; // indicates if we are visiting for the conditional branching
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -129,21 +130,36 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
   @Override
   public String visitRev_if(PythonParser.Rev_ifContext ctx) {
-    _iterable_disponibility = 0;
+    SimpleEntry<Set<String>, Set<String>> pre_if = new SimpleEntry<Set<String>, Set<String>>(
+        new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+    _conditional_visit = true;
     String logical_test = visit(ctx.test());
+    _conditional_visit = false;
+    SimpleEntry<Set<String>, Set<String>> post_cond = new SimpleEntry<Set<String>, Set<String>>(
+        new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
     String suite = visit(ctx.rev_suite());
     String if_stmt = ctx.IF() + " " + logical_test + ctx.COLON() + " " + suite;
-    if (ctx.else_clause() != null) {
-      String else_stmt = visit(ctx.else_clause());
-      for (int i = 0; i < _iterable_disponibility; i++) {
-        // _rev_args.add(_rev_args_unavailable.pop());
+    if (ctx.rev_else() != null) {
+      SimpleEntry<Set<String>, Set<String>> post_body = new SimpleEntry<Set<String>, Set<String>>(
+          new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+      _rev_args = new HashSet<String>(post_cond.getKey());
+      _rev_args_unavailable = new HashSet<String>(post_cond.getValue());
+      String else_stmt = visit(ctx.rev_else());
+      SimpleEntry<Set<String>, Set<String>> post_else = new SimpleEntry<Set<String>, Set<String>>(
+          new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+      if (!post_body.equals(post_else)) {
+        System.err.println("ERROR! Conflict of variables in if-else clause");
+        System.out.println(post_body);
+        System.out.println(post_else);
+        System.exit(1);
       }
+      _rev_args = new HashSet<String>(pre_if.getKey());
+      _rev_args_unavailable = new HashSet<String>(pre_if.getValue());
+      System.out.println(_rev_args);
       return applyIndents() + if_stmt + else_stmt + "\n";
     }
-    System.out.println(_rev_args_unavailable);
-    for (int i = 0; i < _iterable_disponibility; i++) {
-      // _rev_args.add(_rev_args_unavailable.pop());
-    }
+    _rev_args = new HashSet<String>(pre_if.getKey());
+    _rev_args_unavailable = new HashSet<String>(pre_if.getValue());
     return applyIndents() + if_stmt + "\n";
   }
 
@@ -155,14 +171,13 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   @Override
   public String visitName(PythonParser.NameContext ctx) {
     String name = visitChildren(ctx);
-    if (_iterable_disponibility != -1 && _fwd_visit) {
+    if (_conditional_visit && _fwd_visit) {
       if (_rev_args_unavailable.contains(literal(name))) {
         System.err.println("ERROR! the conditional variable is not available");
         System.exit(1);
       }
       _rev_args_unavailable.add(literal(name));
       _rev_args.remove(literal(name));
-      _iterable_disponibility++;
     }
     return name;
   }
@@ -191,7 +206,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       _rev_args_unavailable.add(literal(right));
       _rev_args.remove(literal(right));
       for (String arg : literal(new_variables).split(",")) {
-        if (_rev_args.contains(arg)){
+        if (_rev_args.contains(arg)) {
           System.err.println("ERROR! allocating to variable that has already a value");
           System.exit(1);
         }
@@ -228,7 +243,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       right_tuple = ctx.OPEN_BRACE() + " " + new_variables + ctx.CLOSE_BRACE();
     }
     if (_fwd_visit) {
-      if(_rev_args.contains(literal(left))){
+      if (_rev_args.contains(literal(left))) {
         System.err.println("ERROR! allocating to variable that has already a value");
         System.exit(1);
       }
