@@ -6,10 +6,10 @@ rev func(x,y,yi):
     y += yi
     return x,y,yi
 
-rev ass(x):
-    (i,j) = x
-    j += 3
-    return i,j
+rev ass(x,y):
+    z = (x,y)
+    z += 3
+    return z
 
 
 

@@ -6,10 +6,10 @@ import java.util.*;
 public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends GrammarNameBaseListener
 
   protected Set<String> _rev_args = new HashSet<String>(); // set of arguments in rev function
-  protected Stack<String> _rev_args_unavailable = new Stack<String>();
+  protected Set<String> _rev_args_unavailable = new HashSet<String>();
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
-  protected int _iterable_disponibility = -1; //false; // indicates if we are visiting for the conditional branching
+  protected int _iterable_disponibility = -1; // false; // indicates if we are visiting for the conditional branching
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -135,14 +135,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String if_stmt = ctx.IF() + " " + logical_test + ctx.COLON() + " " + suite;
     if (ctx.else_clause() != null) {
       String else_stmt = visit(ctx.else_clause());
-      for(int i = 0; i < _iterable_disponibility ; i++){
-        _rev_args.add(_rev_args_unavailable.pop());
+      for (int i = 0; i < _iterable_disponibility; i++) {
+        // _rev_args.add(_rev_args_unavailable.pop());
       }
       return applyIndents() + if_stmt + else_stmt + "\n";
     }
     System.out.println(_rev_args_unavailable);
-    for(int i = 0; i < _iterable_disponibility ; i++){
-      _rev_args.add(_rev_args_unavailable.pop());
+    for (int i = 0; i < _iterable_disponibility; i++) {
+      // _rev_args.add(_rev_args_unavailable.pop());
     }
     return applyIndents() + if_stmt + "\n";
   }
@@ -160,7 +160,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
         System.err.println("ERROR! the conditional variable is not available");
         System.exit(1);
       }
-      _rev_args_unavailable.push(literal(name));
+      _rev_args_unavailable.add(literal(name));
       _rev_args.remove(literal(name));
       _iterable_disponibility++;
     }
@@ -177,15 +177,24 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   }
 
   @Override
-  public String visitRev_assign(PythonParser.Rev_assignContext ctx) {
+  public String visitRev_alloc(PythonParser.Rev_allocContext ctx) {
     String new_variables = visit(ctx.testlist_comp());
-    String left_tuple = ctx.OPEN_PAREN() + " " + new_variables + ctx.CLOSE_PAREN();
+    String left_tuple = "";
+    if (ctx.OPEN_PAREN() != null) {
+      left_tuple = ctx.OPEN_PAREN() + " " + new_variables + ctx.CLOSE_PAREN();
+    } else {
+      left_tuple = ctx.OPEN_BRACE() + " " + new_variables + ctx.CLOSE_BRACE();
+    }
     String op = " " + ctx.ASSIGN() + " ";
     String right = visit(ctx.name());
     if (_fwd_visit) {
-      // _rev_args_unavailable.add(literal(right));
+      _rev_args_unavailable.add(literal(right));
       _rev_args.remove(literal(right));
       for (String arg : literal(new_variables).split(",")) {
+        if (_rev_args.contains(arg)){
+          System.err.println("ERROR! allocating to variable that has already a value");
+          System.exit(1);
+        }
         _rev_args.add(literal(arg));
       }
     }
@@ -200,6 +209,45 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String expr = left_tuple + op + right;
     if (_bwd_visit) {
       expr = right + op + left_tuple;
+    }
+    if (_indents > 0) {
+      return applyIndents() + expr + "\n";
+    }
+    return expr + "\n";
+  }
+
+  @Override
+  public String visitRev_dealloc(PythonParser.Rev_deallocContext ctx) {
+    String left = visit(ctx.name());
+    String op = " " + ctx.ASSIGN() + " ";
+    String new_variables = visit(ctx.testlist_comp());
+    String right_tuple = "";
+    if (ctx.OPEN_PAREN() != null) {
+      right_tuple = ctx.OPEN_PAREN() + " " + new_variables + ctx.CLOSE_PAREN();
+    } else {
+      right_tuple = ctx.OPEN_BRACE() + " " + new_variables + ctx.CLOSE_BRACE();
+    }
+    if (_fwd_visit) {
+      if(_rev_args.contains(literal(left))){
+        System.err.println("ERROR! allocating to variable that has already a value");
+        System.exit(1);
+      }
+      _rev_args.add(literal(left));
+      for (String arg : literal(new_variables).split(",")) {
+        _rev_args_unavailable.add(literal(arg));
+        _rev_args.remove(literal(arg));
+      }
+    }
+    if (_bwd_visit) {
+      _rev_args_unavailable.add(literal(left));
+      _rev_args.remove(literal(left));
+      for (String arg : literal(new_variables).split(",")) {
+        _rev_args.add(literal(arg));
+      }
+    }
+    String expr = left + op + right_tuple;
+    if (_bwd_visit) {
+      expr = right_tuple + op + left;
     }
     if (_indents > 0) {
       return applyIndents() + expr + "\n";

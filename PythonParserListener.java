@@ -163,17 +163,29 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitRev_expr(PythonParser.Rev_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code rev_assign}
+	 * Enter a parse tree produced by the {@code rev_alloc}
 	 * labeled alternative in {@link PythonParser#rev_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterRev_assign(PythonParser.Rev_assignContext ctx);
+	void enterRev_alloc(PythonParser.Rev_allocContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code rev_assign}
+	 * Exit a parse tree produced by the {@code rev_alloc}
 	 * labeled alternative in {@link PythonParser#rev_stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitRev_assign(PythonParser.Rev_assignContext ctx);
+	void exitRev_alloc(PythonParser.Rev_allocContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code rev_dealloc}
+	 * labeled alternative in {@link PythonParser#rev_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterRev_dealloc(PythonParser.Rev_deallocContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code rev_dealloc}
+	 * labeled alternative in {@link PythonParser#rev_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitRev_dealloc(PythonParser.Rev_deallocContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code rev_if}
 	 * labeled alternative in {@link PythonParser#rev_stmt}.

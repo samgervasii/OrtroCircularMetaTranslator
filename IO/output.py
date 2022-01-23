@@ -8,11 +8,11 @@ def func_bwd ( yi , x , y ) :
     y -= yi 
     x -= calc ( 1 , 1 ) 
     return yi , x , y 
-def ass_fwd ( x ) :
-    ( i , j ) = x 
-    j += 3 
-    return i , j 
-def ass_bwd ( i , j ) :
-    j -= 3 
-    x  = ( i , j )
-    return x 
+def ass_fwd ( x , y ) :
+    z  = ( x , y )
+    z += 3 
+    return z 
+def ass_bwd ( z ) :
+    z -= 3 
+    ( x , y ) = z 
+    return x , y 
