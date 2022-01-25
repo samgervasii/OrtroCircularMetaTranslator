@@ -1102,6 +1102,8 @@ public class PythonParser extends PythonParserBase {
 		}
 	}
 	public static class Rev_deallocContext extends Rev_stmtContext {
+		public Token open;
+		public Token close;
 		public NameContext name() {
 			return getRuleContext(NameContext.class,0);
 		}
@@ -1158,6 +1160,8 @@ public class PythonParser extends PythonParserBase {
 		}
 	}
 	public static class Rev_allocContext extends Rev_stmtContext {
+		public Token open;
+		public Token close;
 		public Testlist_compContext testlist_comp() {
 			return getRuleContext(Testlist_compContext.class,0);
 		}
@@ -1222,9 +1226,10 @@ public class PythonParser extends PythonParserBase {
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(251);
+				((Rev_allocContext)_localctx).open = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==OPEN_PAREN || _la==OPEN_BRACE) ) {
-				_errHandler.recoverInline(this);
+					((Rev_allocContext)_localctx).open = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -1234,9 +1239,10 @@ public class PythonParser extends PythonParserBase {
 				setState(252);
 				testlist_comp();
 				setState(253);
+				((Rev_allocContext)_localctx).close = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==CLOSE_PAREN || _la==CLOSE_BRACE) ) {
-				_errHandler.recoverInline(this);
+					((Rev_allocContext)_localctx).close = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -1260,9 +1266,10 @@ public class PythonParser extends PythonParserBase {
 				setState(259);
 				match(ASSIGN);
 				setState(260);
+				((Rev_deallocContext)_localctx).open = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==OPEN_PAREN || _la==OPEN_BRACE) ) {
-				_errHandler.recoverInline(this);
+					((Rev_deallocContext)_localctx).open = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -1272,9 +1279,10 @@ public class PythonParser extends PythonParserBase {
 				setState(261);
 				testlist_comp();
 				setState(262);
+				((Rev_deallocContext)_localctx).close = _input.LT(1);
 				_la = _input.LA(1);
 				if ( !(_la==CLOSE_PAREN || _la==CLOSE_BRACE) ) {
-				_errHandler.recoverInline(this);
+					((Rev_deallocContext)_localctx).close = (Token)_errHandler.recoverInline(this);
 				}
 				else {
 					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;

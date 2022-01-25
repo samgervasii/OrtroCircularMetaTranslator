@@ -16,19 +16,27 @@ def ass_bwd ( x , i , j ) :
     i -= 3 
     y  = ( i , j )
     return x , y 
-def branch_fwd ( x , y , z , k ) :
+def branch_fwd ( x , y , z ) :
     if x == 3 : 
         ( i , j ) = y 
         z += 51 
-        else : 
+        if i == 3 : 
+            j += 2 
+            z -= 5 
+    else : 
         ( i , j ) = y 
-        k += 5 
-    return x , y , z , k 
-def branch_bwd ( x , y , z , k ) :
+        j += 22 
+    x += 3 
+    return x , i , j , z 
+def branch_bwd ( x , i , z , j ) :
+    x -= 3 
     if x == 3 : 
-        y  = ( i , j )
+        if i == 3 : 
+            z += 5 
+            j -= 2 
         z -= 51 
-        else : 
         y  = ( i , j )
-        k -= 5 
-    return x , y , z , k 
+    else : 
+        j -= 22 
+        y  = ( i , j )
+    return x , y , z 

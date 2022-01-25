@@ -11,14 +11,18 @@ rev ass(x,y):
     i += 3
     return i,j,x
 
-rev branch(x,y,z,k):
+rev branch(x,y,z):
     if x == 3 :
         (i,j) = y
         z += 51
+        if i == 3 :
+            j += 2
+            z -= 5
     else :
         (i,j) = y
-        k += 5
-    return x,y,z,k
+        j += 22
+    x += 3
+    return x,i,j,z
 
 
 

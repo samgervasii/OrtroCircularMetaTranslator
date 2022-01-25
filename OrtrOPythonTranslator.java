@@ -149,23 +149,18 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
           new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
       if (!post_body.equals(post_else)) {
         System.err.println("ERROR! Conflict of variables in if-else clause");
-        System.out.println(post_body);
-        System.out.println(post_else);
         System.exit(1);
       }
-      _rev_args = new HashSet<String>(pre_if.getKey());
-      _rev_args_unavailable = new HashSet<String>(pre_if.getValue());
+      pre_if.getKey().removeAll(post_cond.getKey());
+      _rev_args.addAll(pre_if.getKey());
+      _rev_args_unavailable.removeAll(pre_if.getKey());
       System.out.println(_rev_args);
       return applyIndents() + if_stmt + else_stmt + "\n";
     }
-    _rev_args = new HashSet<String>(pre_if.getKey());
-    _rev_args_unavailable = new HashSet<String>(pre_if.getValue());
+    pre_if.getKey().removeAll(post_cond.getKey());
+    _rev_args.addAll(pre_if.getKey());
+    _rev_args_unavailable.removeAll(pre_if.getKey());
     return applyIndents() + if_stmt + "\n";
-  }
-
-  @Override
-  public String visitComparison(PythonParser.ComparisonContext ctx) {
-    return visitChildren(ctx);
   }
 
   @Override
@@ -185,21 +180,31 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   @Override
   public String visitRev_suite(PythonParser.Rev_suiteContext ctx) {
     _indents += _IND;
-    String suite = "\n" + visitChildren(ctx);
+    String suite = "";
+    if (!_bwd_visit) {
+      suite = "\n" + visitChildren(ctx);
+      suite = suite.substring(0, suite.length() - 1); // delete redundant NEW LINE
+      _indents -= _IND;
+      return suite;
+    }
+    suite = "\n" + visitChildrenBwd(ctx);
     suite = suite.substring(0, suite.length() - 1); // delete redundant NEW LINE
     _indents -= _IND;
     return suite;
   }
 
   @Override
+  public String visitRev_else(PythonParser.Rev_elseContext ctx) {
+    if (_indents > 0) {
+      return "\n" + applyIndents() + visitChildren(ctx);
+    }
+    return "\n" + visitChildren(ctx);
+  }
+
+  @Override
   public String visitRev_alloc(PythonParser.Rev_allocContext ctx) {
     String new_variables = visit(ctx.testlist_comp());
-    String left_tuple = "";
-    if (ctx.OPEN_PAREN() != null) {
-      left_tuple = ctx.OPEN_PAREN() + " " + new_variables + ctx.CLOSE_PAREN();
-    } else {
-      left_tuple = ctx.OPEN_BRACE() + " " + new_variables + ctx.CLOSE_BRACE();
-    }
+    String left_tuple = ctx.open.getText() + " " + new_variables + ctx.close.getText();
     String op = " " + ctx.ASSIGN() + " ";
     String right = visit(ctx.name());
     if (_fwd_visit) {
@@ -236,12 +241,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String left = visit(ctx.name());
     String op = " " + ctx.ASSIGN() + " ";
     String new_variables = visit(ctx.testlist_comp());
-    String right_tuple = "";
-    if (ctx.OPEN_PAREN() != null) {
-      right_tuple = ctx.OPEN_PAREN() + " " + new_variables + ctx.CLOSE_PAREN();
-    } else {
-      right_tuple = ctx.OPEN_BRACE() + " " + new_variables + ctx.CLOSE_BRACE();
-    }
+    String right_tuple = ctx.open.getText() + " " + new_variables + ctx.close.getText();
     if (_fwd_visit) {
       if (_rev_args.contains(literal(left))) {
         System.err.println("ERROR! allocating to variable that has already a value");
