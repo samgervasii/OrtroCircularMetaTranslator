@@ -4,7 +4,7 @@ def func_fwd ( x , y , yi ) :
     x += calc ( 1 , 1 ) 
     y += yi 
     return x , y , yi 
-def func_bwd ( yi , x , y ) :
+def func_bwd ( x , y , yi ) :
     y -= yi 
     x -= calc ( 1 , 1 ) 
     return yi , x , y 
@@ -12,7 +12,7 @@ def ass_fwd ( x , y ) :
     ( i , j ) = y 
     i += 3 
     return i , j , x 
-def ass_bwd ( x , i , j ) :
+def ass_bwd ( i , j , x ) :
     i -= 3 
     y  = ( i , j )
     return x , y 
@@ -28,7 +28,7 @@ def branch_fwd ( x , y , z ) :
         j += 22 
     x += 3 
     return x , i , j , z 
-def branch_bwd ( x , i , z , j ) :
+def branch_bwd ( x , i , j , z ) :
     x -= 3 
     if x == 3 : 
         if i == 3 : 

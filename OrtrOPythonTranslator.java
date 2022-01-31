@@ -11,6 +11,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
   protected boolean _conditional_visit = false; // indicates if we are visiting for the conditional branching
+  protected String _ret_args = ""; //
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -46,6 +47,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return args;
   }
 
+
   // manually make all the visits to complete the fwd and bwd functions
   @Override
   public String visitRev_func(PythonParser.Rev_funcContext ctx) {
@@ -62,13 +64,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     _bwd_visit = true;
 
     String name_bwd = name_fwd.replace("fwd", "bwd");
-    String bwd_args = " ( " + argStringify(_rev_args) + ")" + " :";
+    String bwd_args = " ( " + _ret_args + ")" + " :";
     String rev_block_bwd = visit(ctx.rev_block());
     String func_bwd = rule_rev + name_bwd + bwd_args + rev_block_bwd;
 
     _bwd_visit = false;
     _rev_args.clear();
     _rev_args_unavailable.clear();
+    _ret_args = "";
 
     if (_indents > 0) {
       return applyIndents() + func_fwd + "\n" + func_bwd;
@@ -295,6 +298,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       args = args.replace(")", "");
     }
     String end = ret + args;
+    _ret_args = args;
     if (_indents > 0) {
       return applyIndents() + end + "\n";
     }
