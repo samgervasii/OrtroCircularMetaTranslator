@@ -135,6 +135,13 @@ public class PythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitRev_for(PythonParser.Rev_forContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitRev_block(PythonParser.Rev_blockContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

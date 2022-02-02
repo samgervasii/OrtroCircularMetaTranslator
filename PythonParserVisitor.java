@@ -123,6 +123,13 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRev_if(PythonParser.Rev_ifContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code rev_for}
+	 * labeled alternative in {@link PythonParser#rev_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRev_for(PythonParser.Rev_forContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#rev_block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

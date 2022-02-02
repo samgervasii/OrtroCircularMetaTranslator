@@ -11,7 +11,6 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
   protected boolean _conditional_visit = false; // indicates if we are visiting for the conditional branching
-  protected String _ret_args = ""; //
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -38,6 +37,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return result;
   }
 
+  //return unique string of arguments from a Set
   public String argStringify(Set<String> set) {
     String args = "";
     for (String arg : set) {
@@ -47,6 +47,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return args;
   }
 
+  //order available args based on return arguments in fwd visit
+  public Set<String> orderArgs(String ret_args){
+    Set<String> nset = new HashSet<String>();
+    for(String s: literal(ret_args).split(",")){
+      nset.add(s);
+    }
+    return nset;
+  }
 
   // manually make all the visits to complete the fwd and bwd functions
   @Override
@@ -64,14 +72,13 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     _bwd_visit = true;
 
     String name_bwd = name_fwd.replace("fwd", "bwd");
-    String bwd_args = " ( " + _ret_args + ")" + " :";
+    String bwd_args = " ( " + argStringify(_rev_args) + ")" + " :";
     String rev_block_bwd = visit(ctx.rev_block());
     String func_bwd = rule_rev + name_bwd + bwd_args + rev_block_bwd;
 
     _bwd_visit = false;
     _rev_args.clear();
     _rev_args_unavailable.clear();
-    _ret_args = "";
 
     if (_indents > 0) {
       return applyIndents() + func_fwd + "\n" + func_bwd;
@@ -131,6 +138,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return expr + "\n";
   }
 
+  //create entries for checking the soundness in the variable occurrences
   @Override
   public String visitRev_if(PythonParser.Rev_ifContext ctx) {
     SimpleEntry<Set<String>, Set<String>> pre_if = new SimpleEntry<Set<String>, Set<String>>(
@@ -157,7 +165,6 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       pre_if.getKey().removeAll(post_cond.getKey());
       _rev_args.addAll(pre_if.getKey());
       _rev_args_unavailable.removeAll(pre_if.getKey());
-      System.out.println(_rev_args);
       return applyIndents() + if_stmt + else_stmt + "\n";
     }
     pre_if.getKey().removeAll(post_cond.getKey());
@@ -203,7 +210,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     }
     return "\n" + visitChildren(ctx);
   }
-
+ 
   @Override
   public String visitRev_alloc(PythonParser.Rev_allocContext ctx) {
     String new_variables = visit(ctx.testlist_comp());
@@ -298,7 +305,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
       args = args.replace(")", "");
     }
     String end = ret + args;
-    _ret_args = args;
+    _rev_args = orderArgs(args);
     if (_indents > 0) {
       return applyIndents() + end + "\n";
     }
