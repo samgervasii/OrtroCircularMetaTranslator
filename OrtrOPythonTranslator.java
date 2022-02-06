@@ -37,7 +37,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return result;
   }
 
-  //return unique string of arguments from a Set
+  // return unique string of arguments from a Set
   public String argStringify(Set<String> set) {
     String args = "";
     for (String arg : set) {
@@ -47,10 +47,10 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return args;
   }
 
-  //order available args based on return arguments in fwd visit
-  public Set<String> orderArgs(String ret_args){
+  // order available args based on return arguments in fwd visit
+  public Set<String> orderArgs(String ret_args) {
     Set<String> nset = new HashSet<String>();
-    for(String s: literal(ret_args).split(",")){
+    for (String s : literal(ret_args).split(",")) {
       nset.add(s);
     }
     return nset;
@@ -79,11 +79,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     _bwd_visit = false;
     _rev_args.clear();
     _rev_args_unavailable.clear();
-
-    if (_indents > 0) {
-      return applyIndents() + func_fwd + "\n" + func_bwd;
-    }
-    return func_fwd + "\n" + func_bwd;
+    return applyIndents() + func_fwd + "\n" + func_bwd;
   }
 
   // manually decides when visitChildren or visitChildrenBwd
@@ -91,7 +87,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   public String visitRev_block(PythonParser.Rev_blockContext ctx) {
     _indents += _IND;
     String block = "";
-    if (!_bwd_visit) {
+    if (_fwd_visit) {
       block = "\n" + visitChildren(ctx);
       block = block.substring(0, block.length() - 1); // delete redundant NEW LINE
       _indents -= _IND;
@@ -138,38 +134,59 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return expr + "\n";
   }
 
-  //create entries for checking the soundness in the variable occurrences
+  // create entries for checking the soundness in the variable occurrences
   @Override
   public String visitRev_if(PythonParser.Rev_ifContext ctx) {
+    // save state pre if
     SimpleEntry<Set<String>, Set<String>> pre_if = new SimpleEntry<Set<String>, Set<String>>(
         new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+
+    // start the conditional visit for check which variable can't be modified in the
+    // for body
     _conditional_visit = true;
     String logical_test = visit(ctx.test());
     _conditional_visit = false;
+
+    // save state post conditional visit (and pre body)
     SimpleEntry<Set<String>, Set<String>> post_cond = new SimpleEntry<Set<String>, Set<String>>(
         new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+
     String suite = visit(ctx.rev_suite());
     String if_stmt = ctx.IF() + " " + logical_test + ctx.COLON() + " " + suite;
+
+    // case where if with else
     if (ctx.rev_else() != null) {
+      // save post body
       SimpleEntry<Set<String>, Set<String>> post_body = new SimpleEntry<Set<String>, Set<String>>(
           new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+
+      // reset Sets in state post_cond to proceed with else
       _rev_args = new HashSet<String>(post_cond.getKey());
       _rev_args_unavailable = new HashSet<String>(post_cond.getValue());
       String else_stmt = visit(ctx.rev_else());
+
+      // save state post else
       SimpleEntry<Set<String>, Set<String>> post_else = new SimpleEntry<Set<String>, Set<String>>(
           new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+
+      // states must coincide
       if (!post_body.equals(post_else)) {
-        System.err.println("ERROR! Conflict of variables in if-else clause");
+        System.err.println("\n\nERROR! Conflict of variables in if-else clause");
         System.exit(1);
       }
+      // state management then return
       pre_if.getKey().removeAll(post_cond.getKey());
       _rev_args.addAll(pre_if.getKey());
       _rev_args_unavailable.removeAll(pre_if.getKey());
+
       return applyIndents() + if_stmt + else_stmt + "\n";
     }
+
+    // case if without else and state management
     pre_if.getKey().removeAll(post_cond.getKey());
     _rev_args.addAll(pre_if.getKey());
     _rev_args_unavailable.removeAll(pre_if.getKey());
+
     return applyIndents() + if_stmt + "\n";
   }
 
@@ -191,7 +208,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   public String visitRev_suite(PythonParser.Rev_suiteContext ctx) {
     _indents += _IND;
     String suite = "";
-    if (!_bwd_visit) {
+    if (_fwd_visit) {
       suite = "\n" + visitChildren(ctx);
       suite = suite.substring(0, suite.length() - 1); // delete redundant NEW LINE
       _indents -= _IND;
@@ -205,12 +222,9 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
 
   @Override
   public String visitRev_else(PythonParser.Rev_elseContext ctx) {
-    if (_indents > 0) {
-      return "\n" + applyIndents() + visitChildren(ctx);
-    }
-    return "\n" + visitChildren(ctx);
+    return "\n" + applyIndents() + visitChildren(ctx);
   }
- 
+
   @Override
   public String visitRev_alloc(PythonParser.Rev_allocContext ctx) {
     String new_variables = visit(ctx.testlist_comp());
@@ -240,10 +254,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     if (_bwd_visit) {
       expr = right + op + left_tuple;
     }
-    if (_indents > 0) {
-      return applyIndents() + expr + "\n";
-    }
-    return expr + "\n";
+    return applyIndents() + expr + "\n";
   }
 
   @Override
@@ -274,10 +285,39 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     if (_bwd_visit) {
       expr = right_tuple + op + left;
     }
-    if (_indents > 0) {
-      return applyIndents() + expr + "\n";
+    return applyIndents() + expr + "\n";
+  }
+
+  @Override
+  public String visitRev_for(PythonParser.Rev_forContext ctx) {
+    // save state precedent to for
+    SimpleEntry<Set<String>, Set<String>> pre_for = new SimpleEntry<Set<String>, Set<String>>(
+        new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+
+    // start the conditional visit for check which variable can't be modified in the
+    // for body
+    _conditional_visit = true;
+    String index = visit(ctx.exprlist());
+    String iterable = visit(ctx.testlist());
+    _conditional_visit = false;
+
+    // save state pre body
+    SimpleEntry<Set<String>, Set<String>> pre_body = new SimpleEntry<Set<String>, Set<String>>(
+        new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
+
+    String body = visit(ctx.rev_suite());
+
+    // Sets management
+    pre_for.getKey().removeAll(pre_body.getKey());
+    _rev_args.addAll(pre_for.getKey());
+    _rev_args_unavailable.removeAll(pre_for.getKey());
+
+    if (_bwd_visit) {
+      return applyIndents() + ctx.FOR() + " " + index + ctx.IN() + " reversed ( " + iterable + " ) " + ctx.COLON()
+          + body + "\n";
     }
-    return expr + "\n";
+    return applyIndents() + ctx.FOR() + " " + index + ctx.IN() + " " + iterable + ctx.COLON() + body + "\n";
+
   }
 
   // check if arguments are equals to definition arguments and not more or less
@@ -306,10 +346,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     }
     String end = ret + args;
     _rev_args = orderArgs(args);
-    if (_indents > 0) {
-      return applyIndents() + end + "\n";
-    }
-    return end + "\n";
+    return applyIndents() + end + "\n";
   }
 
   // add arguments to the Set if we are visiting rev_func in fwd
@@ -322,8 +359,7 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return param;
   }
 
-  // if in a function called under rev block occures a variable in the Set, throw
-  // error
+  // if in a function occures a variable in the Set, throw error
   @Override
   public String visitArgument(PythonParser.ArgumentContext ctx) {
     String terminal_argument = visitChildren(ctx);
