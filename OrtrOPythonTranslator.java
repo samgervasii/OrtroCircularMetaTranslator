@@ -1,4 +1,5 @@
 import java.io.*;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.*;
@@ -11,6 +12,16 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
   protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
   protected boolean _conditional_visit = false; // indicates if we are visiting for the conditional branching
+
+  //check if a String is a numeric value
+  public boolean isNumeric(String str) {
+    try {
+      Double.parseDouble(str);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
 
   // replace all the spaces added by visitTerminal, useful for operations on set
   private String literal(String s) {
@@ -190,18 +201,22 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     return applyIndents() + if_stmt + "\n";
   }
 
+ //check in a conditional visit if a variable is available and then put it in the unavailable (non numeric atom)
   @Override
-  public String visitName(PythonParser.NameContext ctx) {
-    String name = visitChildren(ctx);
-    if (_conditional_visit && _fwd_visit) {
-      if (_rev_args_unavailable.contains(literal(name))) {
-        System.err.println("ERROR! the conditional variable is not available");
-        System.exit(1);
+  public String visitExpr1(PythonParser.Expr1Context ctx) {
+    if (ctx.trailer().isEmpty() && ctx.AWAIT() == null) {
+      String atom = visit(ctx.atom());
+      if (_conditional_visit && _fwd_visit && !isNumeric(atom)) {
+        if (_rev_args_unavailable.contains(literal(atom))) {
+          System.err.println("ERROR! the conditional variable is not available");
+          System.exit(1);
+        }
+        _rev_args_unavailable.add(literal(atom));
+        _rev_args.remove(literal(atom));
       }
-      _rev_args_unavailable.add(literal(name));
-      _rev_args.remove(literal(name));
+      return atom;
     }
-    return name;
+    return visitChildren(ctx);
   }
 
   @Override
@@ -293,7 +308,6 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     // save state precedent to for
     SimpleEntry<Set<String>, Set<String>> pre_for = new SimpleEntry<Set<String>, Set<String>>(
         new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
-
     // start the conditional visit for check which variable can't be modified in the
     // for body
     _conditional_visit = true;
@@ -304,7 +318,6 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     // save state pre body
     SimpleEntry<Set<String>, Set<String>> pre_body = new SimpleEntry<Set<String>, Set<String>>(
         new HashSet<String>(_rev_args), new HashSet<String>(_rev_args_unavailable));
-
     String body = visit(ctx.rev_suite());
 
     // Sets management

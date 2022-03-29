@@ -765,15 +765,113 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitComparison(PythonParser.ComparisonContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#expr}.
+	 * Enter a parse tree produced by the {@code expr9}
+	 * labeled alternative in {@link PythonParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(PythonParser.ExprContext ctx);
+	void enterExpr9(PythonParser.Expr9Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonParser#expr}.
+	 * Exit a parse tree produced by the {@code expr9}
+	 * labeled alternative in {@link PythonParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(PythonParser.ExprContext ctx);
+	void exitExpr9(PythonParser.Expr9Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr8}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr8(PythonParser.Expr8Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr8}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr8(PythonParser.Expr8Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr7}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr7(PythonParser.Expr7Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr7}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr7(PythonParser.Expr7Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr6}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr6(PythonParser.Expr6Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr6}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr6(PythonParser.Expr6Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr5}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr5(PythonParser.Expr5Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr5}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr5(PythonParser.Expr5Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr4}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr4(PythonParser.Expr4Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr4}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr4(PythonParser.Expr4Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr3}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr3(PythonParser.Expr3Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr3}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr3(PythonParser.Expr3Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr2}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr2(PythonParser.Expr2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr2}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr2(PythonParser.Expr2Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expr1}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr1(PythonParser.Expr1Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expr1}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr1(PythonParser.Expr1Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#atom}.
 	 * @param ctx the parse tree

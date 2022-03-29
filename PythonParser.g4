@@ -296,16 +296,16 @@ comparison //Gervasi Samuele (left & right)
     | expr
     ;
 
-expr
-    : AWAIT? atom trailer*
-    | <assoc=right> expr op=POWER expr
-    | op=(ADD | MINUS | NOT_OP) expr
-    | expr op=(STAR | DIV | MOD | IDIV | AT) expr
-    | expr op=(ADD | MINUS) expr
-    | expr op=(LEFT_SHIFT | RIGHT_SHIFT) expr
-    | expr op=AND_OP expr
-    | expr op=XOR expr
-    | expr op=OR_OP expr
+expr //Gervasi Samuele (expr numeration #)
+    : AWAIT? atom trailer*                                  #expr1
+    | <assoc=right> expr op=POWER expr                      #expr2
+    | op=(ADD | MINUS | NOT_OP) expr                        #expr3
+    | expr op=(STAR | DIV | MOD | IDIV | AT) expr           #expr4
+    | expr op=(ADD | MINUS) expr                            #expr5
+    | expr op=(LEFT_SHIFT | RIGHT_SHIFT) expr               #expr6
+    | expr op=AND_OP expr                                   #expr7
+    | expr op=XOR expr                                      #expr8
+    | expr op=OR_OP expr                                    #expr9
     ;
 
 atom

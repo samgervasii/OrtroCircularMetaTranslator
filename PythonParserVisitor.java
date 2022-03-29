@@ -459,11 +459,68 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitComparison(PythonParser.ComparisonContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PythonParser#expr}.
+	 * Visit a parse tree produced by the {@code expr9}
+	 * labeled alternative in {@link PythonParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpr(PythonParser.ExprContext ctx);
+	T visitExpr9(PythonParser.Expr9Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr8}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr8(PythonParser.Expr8Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr7}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr7(PythonParser.Expr7Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr6}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr6(PythonParser.Expr6Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr5}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr5(PythonParser.Expr5Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr4}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr4(PythonParser.Expr4Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr3}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr3(PythonParser.Expr3Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr2}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr2(PythonParser.Expr2Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expr1}
+	 * labeled alternative in {@link PythonParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr1(PythonParser.Expr1Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link PythonParser#atom}.
 	 * @param ctx the parse tree
