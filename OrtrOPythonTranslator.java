@@ -5,13 +5,17 @@ import org.antlr.v4.runtime.tree.*;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
-public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends GrammarNameBaseListener
-
-  protected Set<String> _rev_args = new HashSet<String>(); // set of arguments in rev function
+//Extends GrammarNameBaseListener
+public class ORTROPythonTranslator extends PythonPrettyPrinter { 
+  //set of arguments in rev function
+  protected Set<String> _rev_args = new HashSet<String>(); 
   protected Set<String> _rev_args_unavailable = new HashSet<String>();
-  protected boolean _bwd_visit = false; // indicates if we are visiting for the bwd
-  protected boolean _fwd_visit = false; // indicates if we are visiting for the fwd
-  protected boolean _conditional_visit = false; // indicates if we are visiting for the conditional branching
+  //indicates if we are visiting for the bwd
+  protected boolean _bwd_visit = false;
+  //indicates if we are visiting for the fwd 
+  protected boolean _fwd_visit = false;
+  //indicates if we are visiting for the conditional branching 
+  protected boolean _conditional_visit = false; 
 
   //check if a String is a numeric value
   public boolean isNumeric(String str) {
@@ -100,12 +104,14 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
     String block = "";
     if (_fwd_visit) {
       block = "\n" + visitChildren(ctx);
-      block = block.substring(0, block.length() - 1); // delete redundant NEW LINE
+      //delete redundant NEW LINE
+      block = block.substring(0, block.length() - 1); 
       _indents -= _IND;
       return block;
     }
     block = "\n" + visitChildrenBwd(ctx);
-    block = block.substring(0, block.length() - 1); // delete redundant NEW LINE
+    //delete redundant NEW LINE
+    block = block.substring(0, block.length() - 1); 
     _indents -= _IND;
     return block;
   }
@@ -388,18 +394,23 @@ public class OrtrOPythonTranslator extends PythonPrettyPrinter { // Extends Gram
   // Main
   public static void main(String[] args) throws IOException {
     // objects declaration
-    String input_path = "IO\\input.opy";// args[0]; // from commands line, otherwise "IO\\input.py";
-    String output_path = "IO\\output.py";// args[1]; // from commands line, otherwise "IO\\output.py"
-
-    FileWriter targetWriter = new FileWriter(output_path); // file writer
-    PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); // GrammarNameLexer lexer = new ..
-    CommonTokenStream tokens = new CommonTokenStream(lexer); // Tokens stream from lexer
-    PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
-    ParseTree tree = parser.root(); // parser.StarterRule() for ParseTree
-    OrtrOPythonTranslator visitor = new OrtrOPythonTranslator(); // main listener
+    String input_path = args[0];
+    String output_path = args[1]; 
+    //file writer
+    FileWriter targetWriter = new FileWriter(output_path);
+    //GrammarNameLexer lexer = new ..
+    PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path));
+    //Tokens stream from lexer 
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    //GrammarNameParser parser = new GrammarNameParser from tokens 
+    PythonParser parser = new PythonParser(tokens);
+    //parser.StarterRule() for ParseTree 
+    ParseTree tree = parser.root(); 
+    ORTROPythonTranslator visitor = new ORTROPythonTranslator();
 
     // actions
-    String c = visitor.visit(tree); // we recover the string target completed
+    //we recover the string target completed
+    String c = visitor.visit(tree); 
     targetWriter.write(c);
     System.out.println("code written on file succesfully");
     targetWriter.close();

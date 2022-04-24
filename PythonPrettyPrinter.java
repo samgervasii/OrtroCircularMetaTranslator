@@ -1,5 +1,3 @@
-import java.io.*;
-import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
 //Extends GrammarNameBaseVisitor
@@ -117,3 +115,4 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> {
     System.exit(1);
     return node.getText();
   }
+}
