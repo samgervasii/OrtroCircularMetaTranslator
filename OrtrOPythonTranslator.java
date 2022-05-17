@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
 //Extends GrammarNameBaseListener
-public class ORTROPythonTranslator extends PythonPrettyPrinter { 
+public class OrtroPythonTranslator extends PythonPrettyPrinter { 
   //set of arguments in rev function
   protected Set<String> _rev_args = new HashSet<String>(); 
   protected Set<String> _rev_args_unavailable = new HashSet<String>();
@@ -406,7 +406,7 @@ public class ORTROPythonTranslator extends PythonPrettyPrinter {
     PythonParser parser = new PythonParser(tokens);
     //parser.StarterRule() for ParseTree 
     ParseTree tree = parser.root(); 
-    ORTROPythonTranslator visitor = new ORTROPythonTranslator();
+    OrtroPythonTranslator visitor = new OrtroPythonTranslator();
 
     // actions
     //we recover the string target completed
