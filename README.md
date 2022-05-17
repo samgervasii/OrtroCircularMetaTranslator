@@ -15,6 +15,6 @@ javac *.java
 ```
 then run with
 ```
-OrtroPythonTranslator {1} {2}
+java OrtroPythonTranslator {1} {2}
 ```
 where {1} = input path and {2} = outputh path
