@@ -130,7 +130,7 @@ public class OrtroPythonTranslator extends PythonPrettyPrinter {
     }
     String right = visit(ctx.testlist());
     if (_fwd_visit) {
-      if (right.contains(literal(left) + " ") && _rev_args_unavailable.contains(literal(left))) {
+      if (right.contains(literal(left) + " ")) {
         System.err.println("ERROR! An unavailable variable is being modified in the same valutation by itself.");
         System.exit(1);
       }
@@ -383,7 +383,7 @@ public class OrtroPythonTranslator extends PythonPrettyPrinter {
   public String visitArgument(PythonParser.ArgumentContext ctx) {
     String terminal_argument = visitChildren(ctx);
     if (_fwd_visit) {
-      if (_rev_args_unavailable.contains(literal(terminal_argument))) {
+      if (_rev_args_unavailable.contains(literal(terminal_argument)) && !_conditional_visit) {
         System.err.println("ERROR! An unavailable variable is being modified in the same valutation by a function");
         System.exit(1);
       }

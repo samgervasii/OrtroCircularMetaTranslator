@@ -1,22 +1,12 @@
-rev branch(x,y,z):
-    if x == 3 :
-        (i,j) = y
-        z += 51
-        if i == 3 :
-            j += 2
-            z -= 5
-    else :
-        (i,j) = y
-        j += 22
-    x += 3
-    return x,i,j,z
+rev revSum(a,b):
+    a += b
+    c = (a,b)
+    return c
 
+rev revAddOneIfEven(x,y,k,z):
+    for x in range(z):
+        if(k%2 == 0):
+            y += 1
 
-rev iter(x,y,z):
-    for x in range(2,6,1):
-        y += 3
-        (i,j) = z
-    return x,y,i,j
-
-
+    return x,y,k,z
 
